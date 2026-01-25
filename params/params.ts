@@ -11,6 +11,7 @@ export function Param(data?: string) {
             type: 'param',
             data,
             name
-        })
+        });
+        Reflect.defineMetadata('mini:params', params, target.constructor);
     }
 }

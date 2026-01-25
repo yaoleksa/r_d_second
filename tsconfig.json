@@ -37,6 +37,8 @@
     "jsx": "react-jsx",
     "verbatimModuleSyntax": false,
     "isolatedModules": true,
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true,
     "noUncheckedSideEffectImports": true,
     "moduleDetection": "force",
     "skipLibCheck": true,

@@ -10,6 +10,7 @@ export function Param(data) {
             data,
             name
         });
+        Reflect.defineMetadata('mini:params', params, target.constructor);
     };
 }
 //# sourceMappingURL=params.js.map
