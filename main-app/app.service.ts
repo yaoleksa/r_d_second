@@ -23,12 +23,19 @@ export class UserService {
     };
     // coresponding with the PATCH HTTP request
     updateUser(updatedUser: User) {
-        for(let user of this.users) {
-            if(user.email === updatedUser.email) {
+        for(let i = 0; i < this.users.length; i++) {
+            let user = this.users[i];
+            if(user?.email === updatedUser.email) {
                 user.name = updatedUser.name;
             }
         }
     }
     // coresponding with the DELETE HTTP request
-    deleteUser(email: string) {}
+    deleteUser(email: string) {
+        for(let i = 0; i < this.users.length; i++) {
+            if(this.users[i]?.email === email) {
+                this.users.splice(i, 1);
+            }
+        }
+    }
 }

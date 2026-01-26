@@ -29,14 +29,21 @@ let UserService = class UserService {
     ;
     // coresponding with the PATCH HTTP request
     updateUser(updatedUser) {
-        for (let user of this.users) {
-            if (user.email === updatedUser.email) {
+        for (let i = 0; i < this.users.length; i++) {
+            let user = this.users[i];
+            if (user?.email === updatedUser.email) {
                 user.name = updatedUser.name;
             }
         }
     }
     // coresponding with the DELETE HTTP request
-    deleteUser(email) { }
+    deleteUser(email) {
+        for (let i = 0; i < this.users.length; i++) {
+            if (this.users[i]?.email === email) {
+                this.users.splice(i, 1);
+            }
+        }
+    }
 };
 UserService = __decorate([
     Injectible()
