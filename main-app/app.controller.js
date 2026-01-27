@@ -7,11 +7,33 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
+var __param = (this && this.__param) || function (paramIndex, decorator) {
+    return function (target, key) { decorator(target, key, paramIndex); }
+};
 import { Controller } from "../common/controller/Controller.js";
-import { Get } from "../common/http-layers/HttpLayers.js";
-let CatsController = class CatsController {
+import { Get, Post, Put, Patch, Delete } from "../common/http-layers/HttpLayers.js";
+import { UserService } from "./app.service.js";
+import { User } from "./dto/userDTO.js";
+import { Query } from "../common/params/params.js";
+let UsersController = class UsersController {
+    userService;
+    constructor(userService) {
+        this.userService = userService;
+    }
     findAll() {
-        return [];
+        return this.userService.retreiveAllUsers();
+    }
+    createNewUser(newUser) {
+        this.userService.addNewUser(newUser);
+    }
+    replaceUser(newUser) {
+        this.userService.replaceUser(newUser);
+    }
+    updateUser(newUser) {
+        this.userService.updateUser(newUser);
+    }
+    deleteUserByEmail(email) {
+        this.userService.deleteUser(email);
     }
 };
 __decorate([
@@ -19,9 +41,35 @@ __decorate([
     __metadata("design:type", Function),
     __metadata("design:paramtypes", []),
     __metadata("design:returntype", Array)
-], CatsController.prototype, "findAll", null);
-CatsController = __decorate([
-    Controller('users')
-], CatsController);
-export { CatsController };
+], UsersController.prototype, "findAll", null);
+__decorate([
+    Post('new-user'),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [User]),
+    __metadata("design:returntype", void 0)
+], UsersController.prototype, "createNewUser", null);
+__decorate([
+    Put('replace-user'),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [User]),
+    __metadata("design:returntype", void 0)
+], UsersController.prototype, "replaceUser", null);
+__decorate([
+    Patch('update-user'),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [User]),
+    __metadata("design:returntype", void 0)
+], UsersController.prototype, "updateUser", null);
+__decorate([
+    Delete(),
+    __param(0, Query('email')),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [String]),
+    __metadata("design:returntype", void 0)
+], UsersController.prototype, "deleteUserByEmail", null);
+UsersController = __decorate([
+    Controller('users'),
+    __metadata("design:paramtypes", [UserService])
+], UsersController);
+export { UsersController };
 //# sourceMappingURL=app.controller.js.map

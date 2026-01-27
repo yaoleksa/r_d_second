@@ -5,7 +5,7 @@ import { User } from "./dto/userDTO.js";
 import { Query } from "../common/params/params.js";
 
 @Controller('users')
-export class CatsController {
+export class UsersController {
 
     constructor(private userService: UserService) {}
 
