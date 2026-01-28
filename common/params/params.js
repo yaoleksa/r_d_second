@@ -1,3 +1,10 @@
+// define types before
+export var ParamType;
+(function (ParamType) {
+    ParamType[ParamType["PARAM"] = 0] = "PARAM";
+    ParamType[ParamType["QUERY"] = 1] = "QUERY";
+    ParamType[ParamType["BODY"] = 2] = "BODY";
+})(ParamType || (ParamType = {}));
 export function Param(data) {
     return function (target, name, idx) {
         const ps = Reflect.getMetadata('design:paramtypes', target, name) ?? [];
@@ -6,11 +13,11 @@ export function Param(data) {
         params.push({
             index: idx,
             metatype,
-            type: 'param',
+            type: ParamType.PARAM,
             data,
             name
         });
-        Reflect.defineMetadata('mini:params', params, target.constructor);
+        Reflect.defineMetadata('params', params, target, name);
     };
 }
 ;
@@ -22,10 +29,10 @@ export function Body() {
         params.push({
             index: idx,
             metatype,
-            type: 'body',
+            type: ParamType.BODY,
             name
         });
-        Reflect.defineMetadata('mini:params', params, target.constructor);
+        Reflect.defineMetadata('params', params, target, name);
     };
 }
 export function Query(data) {
@@ -36,17 +43,11 @@ export function Query(data) {
         params.push({
             index: idx,
             metatype,
-            type: 'query',
+            type: ParamType.QUERY,
             data,
             name
         });
-        Reflect.defineMetadata('params', params, target.constructor);
+        Reflect.defineMetadata('params', params, target, name);
     };
 }
-export var ParamType;
-(function (ParamType) {
-    ParamType[ParamType["PARAM"] = 0] = "PARAM";
-    ParamType[ParamType["QUERY"] = 1] = "QUERY";
-    ParamType[ParamType["BODY"] = 2] = "BODY";
-})(ParamType || (ParamType = {}));
 //# sourceMappingURL=params.js.map

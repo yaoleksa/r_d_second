@@ -7,18 +7,27 @@ async function executeHandler({ req, controller, methodName, container, }) {
         const method = controller[methodName];
         const paramMeta = Reflect.getMetadata('params', controller, methodName) ?? [];
         const args = [];
-        for (let i = 0; i < paramMeta.length; i++) {
-            const { type, name } = paramMeta[i];
-            let value = type === ParamType.PARAM
-                ? req.params[name]
-                : type === ParamType.QUERY
-                    ? req.query[name]
-                    : req.body;
-            args[i] = value;
+        console.log(paramMeta, controller, methodName);
+        for (const param of paramMeta) {
+            switch (param.type) {
+                case ParamType.BODY:
+                    console.log(`executeHandler: param.index = ${param.index}, args = ${args}, req.body = ${req.body}`);
+                    args[param.index] = req.body;
+                    break;
+                case ParamType.QUERY:
+                    args[param.index] = req.query[param.name];
+                    break;
+                case ParamType.PARAM:
+                    args[param.index] = req.params[param.name];
+                    break;
+                default:
+                    console.log(param);
+            }
         }
         return await method.apply(controller, args);
     }
     catch (e) {
+        console.log('error?');
         if (e instanceof HttpException)
             throw e;
         throw new HttpException(500, e.message);

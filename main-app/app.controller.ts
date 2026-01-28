@@ -2,7 +2,7 @@ import { Controller } from "../common/controller/Controller.js";
 import { Get, Post, Put, Patch, Delete } from "../common/http-layers/HttpLayers.js";
 import { UserService } from "./app.service.js";
 import { User } from "./dto/userDTO.js";
-import { Query } from "../common/params/params.js";
+import { Query, Body } from "../common/params/params.js";
 
 @Controller('')
 export class UsersController {
@@ -15,7 +15,8 @@ export class UsersController {
     }
 
     @Post('/')
-    createNewUser(newUser: User) {
+    createNewUser(@Body() newUser: User) {
+        console.log(`Controller ${newUser}`);
         this.userService.addNewUser(newUser);
     }
 

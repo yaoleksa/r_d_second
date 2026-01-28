@@ -1,5 +1,12 @@
 import { ArgumentMetadata } from "../types/types.js";
 
+// define types before
+export enum ParamType {
+  PARAM,
+  QUERY,
+  BODY,
+}
+
 export function Param(data?: string) {
     return function(target: any, name: string, idx: number) {
         const ps = Reflect.getMetadata('design:paramtypes', target, name) ?? [];
@@ -8,11 +15,11 @@ export function Param(data?: string) {
         params.push({
             index: idx,
             metatype,
-            type: 'param',
+            type: ParamType.PARAM,
             data,
             name
         });
-        Reflect.defineMetadata('mini:params', params, target.constructor);
+        Reflect.defineMetadata('params', params, target, name);
     }
 };
 
@@ -24,10 +31,10 @@ export function Body() {
         params.push({
             index: idx,
             metatype,
-            type: 'body',
+            type: ParamType.BODY,
             name
         });
-        Reflect.defineMetadata('mini:params', params, target.constructor);
+        Reflect.defineMetadata('params', params, target, name);
     };
 }
 
@@ -39,16 +46,10 @@ export function Query(data: string) {
         params.push({
             index: idx,
             metatype,
-            type: 'query',
+            type: ParamType.QUERY,
             data,
             name
         });
-        Reflect.defineMetadata('params', params, target.constructor);
+        Reflect.defineMetadata('params', params, target, name);
     };
-}
-
-export enum ParamType {
-  PARAM,
-  QUERY,
-  BODY,
 }
