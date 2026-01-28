@@ -54,7 +54,7 @@ export class MiniNestFactory {
         const app = express();
         app.use(express.json());
         const container = new Container();
-        // this.initModule(AppModule, app, container);
+        this.initModule(AppModule, app, container);
         return {
             listen(port: number) {
                 app.listen(port);
