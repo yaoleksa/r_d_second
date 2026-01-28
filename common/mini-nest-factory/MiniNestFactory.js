@@ -43,12 +43,12 @@ export class MiniNestFactory {
     }
     static initModule(Module, app, container) {
         console.log(Module);
-        const meta = Reflect.getMetadata(Module, Module);
+        const meta = Reflect.getMetadata('mini:module', Module);
         meta.providers?.forEach((p) => container.resolve(p));
         meta.controllers?.forEach((Controller) => {
-            const prefix = Reflect.getMetadata(Symbol('controller'), Controller) ?? '';
+            const prefix = Reflect.getMetadata('mini:prefix', Controller) ?? '';
             const controller = container.resolve(Controller);
-            const routes = Reflect.getMetadata(Symbol('routes'), Controller) ?? [];
+            const routes = Reflect.getMetadata('mini:routes', Controller) ?? [];
             routes.forEach((route) => {
                 app[route.method.toLowerCase()](prefix + route.path, async (req, res) => {
                     try {

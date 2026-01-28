@@ -2,7 +2,6 @@ import express from 'express';
 import { Container } from '../container/container.js';
 import { HttpException } from '../exception/HttpException.js';
 import { ParamType } from '../params/params.js';
-import { Module } from '../module/Module.js';
 
 import type { Request, Response } from 'express';
 
@@ -19,10 +18,8 @@ async function executeHandler({
 }) {
   try {
     const method = controller[methodName];
-    const paramMeta =
-      Reflect.getMetadata(Symbol('params'), controller, methodName) ?? [];
-    const paramPipes =
-      Reflect.getMetadata(Symbol('pipes'), controller, methodName) ?? {};
+    const paramMeta = Reflect.getMetadata(Symbol('params'), controller, methodName) ?? [];
+    const paramPipes = Reflect.getMetadata(Symbol('pipes'), controller, methodName) ?? {};
 
     const args = [];
 
@@ -65,12 +62,12 @@ export class MiniNestFactory {
 
     private static initModule(Module: any, app: any, container: any) {
         console.log(Module);
-        const meta = Reflect.getMetadata(Module, Module);
+        const meta = Reflect.getMetadata('mini:module', Module);
         meta.providers?.forEach((p: any) => container.resolve(p));
         meta.controllers?.forEach((Controller: any) => {
-            const prefix = Reflect.getMetadata(Symbol('controller'), Controller) ?? '';
+            const prefix = Reflect.getMetadata('mini:prefix', Controller) ?? '';
             const controller = container.resolve(Controller);
-            const routes = Reflect.getMetadata(Symbol('routes'), Controller) ?? [];
+            const routes = Reflect.getMetadata('mini:routes', Controller) ?? [];
             routes.forEach((route: any) => {
                 app[route.method.toLowerCase()](
                 prefix + route.path,
