@@ -18,7 +18,6 @@ let UserService = class UserService {
     }
     ;
     // coresponding with the PUT HTTP request
-    // If second parameter is true search for user by email, if false search by name
     replaceUser(renewUser) {
         for (let i = 0; i < this.users.length; i++) {
             if (this.users[i]?.email === renewUser.email) {

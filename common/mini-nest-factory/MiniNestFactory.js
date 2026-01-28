@@ -1,4 +1,2 @@
-export function MiniNestFactory() {
-    // express.
-}
+export {};
 //# sourceMappingURL=MiniNestFactory.js.map
