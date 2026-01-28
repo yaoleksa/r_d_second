@@ -1,4 +1,5 @@
 export function Module(metadata: {
+    imports: any[],
     controllers: any[],
     providers: any[]
 }) {

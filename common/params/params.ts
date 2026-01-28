@@ -46,3 +46,9 @@ export function Query(data: string) {
         Reflect.defineMetadata('mini:params', params, target.constructor);
     };
 }
+
+export enum ParamType {
+  PARAM,
+  QUERY,
+  BODY,
+}

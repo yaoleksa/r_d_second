@@ -11,6 +11,7 @@ let AppModule = class AppModule {
 };
 AppModule = __decorate([
     Module({
+        imports: [],
         controllers: [UsersController],
         providers: [UserService]
     })

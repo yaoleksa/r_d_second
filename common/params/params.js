@@ -43,4 +43,10 @@ export function Query(data) {
         Reflect.defineMetadata('mini:params', params, target.constructor);
     };
 }
+export var ParamType;
+(function (ParamType) {
+    ParamType[ParamType["PARAM"] = 0] = "PARAM";
+    ParamType[ParamType["QUERY"] = 1] = "QUERY";
+    ParamType[ParamType["BODY"] = 2] = "BODY";
+})(ParamType || (ParamType = {}));
 //# sourceMappingURL=params.js.map

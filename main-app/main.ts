@@ -1,5 +1,7 @@
 import { AppModule } from "./app.modele.js";
+import { MiniNestFactory } from "../common/mini-nest-factory/MiniNestFactory.js";
 
-async function bootstrap() {
-    const MiniMestFactory = 'some-factory';
-}
+(async function() {
+    const application = await MiniNestFactory.create(AppModule);
+    await application.listen(3000);
+})();
