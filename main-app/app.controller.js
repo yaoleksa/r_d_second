@@ -51,12 +51,14 @@ __decorate([
 ], UsersController.prototype, "createNewUser", null);
 __decorate([
     Put('/'),
+    __param(0, Body()),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [User]),
     __metadata("design:returntype", void 0)
 ], UsersController.prototype, "replaceUser", null);
 __decorate([
     Patch('/'),
+    __param(0, Body()),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [User]),
     __metadata("design:returntype", void 0)

@@ -20,12 +20,12 @@ export class UsersController {
     }
 
     @Put('/')
-    replaceUser(newUser: User) {
+    replaceUser(@Body() newUser: User) {
         this.userService.replaceUser(newUser);
     }
 
     @Patch('/')
-    updateUser(newUser: User) {
+    updateUser(@Body() newUser: User) {
         this.userService.updateUser(newUser);
     }
 
