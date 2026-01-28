@@ -1,11 +1,10 @@
-import type { RequestHandler } from "express";
 type Method = 'get' | 'post' | 'put' | 'patch' | 'delete';
 
 export function Route(method: Method, path = '') {
     return function(target: any, key: string) {
-        const routes = Reflect.getMetadata('mini:routes', target.constructor) ?? [];
+        const routes = Reflect.getMetadata('routes', target.constructor) ?? [];
         routes.push({ method, path, handlerName: key });
-        Reflect.defineMetadata('mini:routes', routes, target.constructor);
+        Reflect.defineMetadata('routes', routes, target.constructor);
     };
 }
 

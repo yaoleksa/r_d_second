@@ -4,6 +4,6 @@ export function Module(metadata: {
     providers: any[]
 }) {
     return function(target: any) {
-        Reflect.defineMetadata('mini:module', metadata, target);
+        Reflect.defineMetadata('module', metadata, target);
     };
 }

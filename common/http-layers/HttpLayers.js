@@ -1,8 +1,8 @@
 export function Route(method, path = '') {
     return function (target, key) {
-        const routes = Reflect.getMetadata('mini:routes', target.constructor) ?? [];
+        const routes = Reflect.getMetadata('routes', target.constructor) ?? [];
         routes.push({ method, path, handlerName: key });
-        Reflect.defineMetadata('mini:routes', routes, target.constructor);
+        Reflect.defineMetadata('routes', routes, target.constructor);
     };
 }
 export const Get = (p = '') => Route('get', p);

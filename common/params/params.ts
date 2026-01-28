@@ -4,7 +4,7 @@ export function Param(data?: string) {
     return function(target: any, name: string, idx: number) {
         const ps = Reflect.getMetadata('design:paramtypes', target, name) ?? [];
         const metatype = ps[idx];
-        const params: Array<ArgumentMetadata> = Reflect.getMetadata('mini:params', target.constructor) ?? [];
+        const params: Array<ArgumentMetadata> = Reflect.getMetadata('params', target.constructor) ?? [];
         params.push({
             index: idx,
             metatype,
@@ -20,7 +20,7 @@ export function Body() {
     return function(target: any, name: string, idx: number) {
         const ps = Reflect.getMetadata('design:paramtypes', target, name) ?? [];
         const metatype = ps[idx];
-        const params: Array<ArgumentMetadata> = Reflect.getMetadata('mini:params', target.constructor) ?? [];
+        const params: Array<ArgumentMetadata> = Reflect.getMetadata('params', target.constructor) ?? [];
         params.push({
             index: idx,
             metatype,
@@ -35,7 +35,7 @@ export function Query(data: string) {
     return function(target: any, name: string, idx: number) {
         const ps = Reflect.getMetadata('design:paramtypes', target, name) ?? [];
         const metatype = ps[idx];
-        const params: Array<ArgumentMetadata> = Reflect.getMetadata('mini:params', target.constructor) ?? [];
+        const params: Array<ArgumentMetadata> = Reflect.getMetadata('params', target.constructor) ?? [];
         params.push({
             index: idx,
             metatype,
@@ -43,7 +43,7 @@ export function Query(data: string) {
             data,
             name
         });
-        Reflect.defineMetadata('mini:params', params, target.constructor);
+        Reflect.defineMetadata('params', params, target.constructor);
     };
 }
 

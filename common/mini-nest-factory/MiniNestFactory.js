@@ -1,12 +1,11 @@
 import express from 'express';
-import { Container } from '../container/container.js';
+import { container } from '../container/container.js';
 import { HttpException } from '../exception/HttpException.js';
 import { ParamType } from '../params/params.js';
 async function executeHandler({ req, controller, methodName, container, }) {
     try {
         const method = controller[methodName];
         const paramMeta = Reflect.getMetadata(Symbol('params'), controller, methodName) ?? [];
-        const paramPipes = Reflect.getMetadata(Symbol('pipes'), controller, methodName) ?? {};
         const args = [];
         for (let i = 0; i < paramMeta.length; i++) {
             const { type, name } = paramMeta[i];
@@ -15,9 +14,6 @@ async function executeHandler({ req, controller, methodName, container, }) {
                 : type === ParamType.QUERY
                     ? req.query[name]
                     : req.body;
-            for (const Pipe of paramPipes[i] ?? []) {
-                value = container.resolve(Pipe).transform(value);
-            }
             args[i] = value;
         }
         return await method.apply(controller, args);
@@ -32,7 +28,6 @@ export class MiniNestFactory {
     static async create(AppModule) {
         const app = express();
         app.use(express.json());
-        const container = new Container();
         this.initModule(AppModule, app, container);
         return {
             listen(port) {
@@ -42,13 +37,13 @@ export class MiniNestFactory {
         };
     }
     static initModule(Module, app, container) {
-        console.log(Module);
-        const meta = Reflect.getMetadata('mini:module', Module);
+        const meta = Reflect.getMetadata('module', Module);
         meta.providers?.forEach((p) => container.resolve(p));
         meta.controllers?.forEach((Controller) => {
-            const prefix = Reflect.getMetadata('mini:prefix', Controller) ?? '';
+            container.register(Controller, Controller);
+            const prefix = Reflect.getMetadata('prefix', Controller) ?? '';
             const controller = container.resolve(Controller);
-            const routes = Reflect.getMetadata('mini:routes', Controller) ?? [];
+            const routes = Reflect.getMetadata('routes', Controller) ?? [];
             routes.forEach((route) => {
                 app[route.method.toLowerCase()](prefix + route.path, async (req, res) => {
                     try {
