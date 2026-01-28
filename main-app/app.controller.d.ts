@@ -7,6 +7,6 @@ export declare class UsersController {
     createNewUser(newUser: User): void;
     replaceUser(newUser: User): void;
     updateUser(newUser: User): void;
-    deleteUserByEmail(email: string): void;
+    deleteUserByEmail(email: any): void;
 }
 //# sourceMappingURL=app.controller.d.ts.map

@@ -67,7 +67,7 @@ __decorate([
     Delete('/'),
     __param(0, Query('email')),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [String]),
+    __metadata("design:paramtypes", [Object]),
     __metadata("design:returntype", void 0)
 ], UsersController.prototype, "deleteUserByEmail", null);
 UsersController = __decorate([

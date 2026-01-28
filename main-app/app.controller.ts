@@ -30,7 +30,7 @@ export class UsersController {
     }
 
     @Delete('/')
-    deleteUserByEmail(@Query('email') email: string) {
+    deleteUserByEmail(@Query('email') email: any) {
         this.userService.deleteUser(email);
     }
 }
