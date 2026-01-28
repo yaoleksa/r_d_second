@@ -24,7 +24,6 @@ let UsersController = class UsersController {
         return this.userService.retreiveAllUsers();
     }
     createNewUser(newUser) {
-        console.log(`Controller ${newUser}`);
         this.userService.addNewUser(newUser);
     }
     replaceUser(newUser) {

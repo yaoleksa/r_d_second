@@ -16,7 +16,6 @@ export class UsersController {
 
     @Post('/')
     createNewUser(@Body() newUser: User) {
-        console.log(`Controller ${newUser}`);
         this.userService.addNewUser(newUser);
     }
 

@@ -21,11 +21,9 @@ async function executeHandler({
     const paramMeta = Reflect.getMetadata('params', controller, methodName) ?? [];
 
     const args: any[] = [];
-    console.log(paramMeta, controller, methodName);
     for (const param of paramMeta) {
         switch(param.type) {
             case ParamType.BODY:
-                console.log(`executeHandler: param.index = ${param.index}, args = ${args}, req.body = ${req.body}`);
                 args[param.index] = req.body;
                 break;
             case ParamType.QUERY:
@@ -35,13 +33,12 @@ async function executeHandler({
                 args[param.index] = req.params[param.name];
                 break;
             default:
-                console.log(param);
+                break;
         }
     }
 
     return await method.apply(controller, args);
   } catch (e: any) {
-    console.log('error?');
     if (e instanceof HttpException) throw e;
     throw new HttpException(500, e.message);
   }

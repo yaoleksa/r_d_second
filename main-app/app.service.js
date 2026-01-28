@@ -14,7 +14,6 @@ let UserService = class UserService {
     ;
     // coresponding with the POST HTTP request
     addNewUser(newUser) {
-        console.log(`Service: ${newUser}`);
         this.users.push(newUser);
     }
     ;

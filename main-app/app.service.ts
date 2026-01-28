@@ -10,7 +10,6 @@ export class UserService {
     };
     // coresponding with the POST HTTP request
     addNewUser(newUser: User) {
-        console.log(`Service: ${newUser}`);
         this.users.push(newUser);
     };
     // coresponding with the PUT HTTP request
