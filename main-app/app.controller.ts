@@ -4,32 +4,32 @@ import { UserService } from "./app.service.js";
 import { User } from "./dto/userDTO.js";
 import { Query } from "../common/params/params.js";
 
-@Controller('users')
+@Controller('')
 export class UsersController {
 
     constructor(private userService: UserService) {}
 
-    @Get('all')
+    @Get('/')
     findAll(): User[] {
         return this.userService.retreiveAllUsers();
     }
 
-    @Post('new-user')
+    @Post('/')
     createNewUser(newUser: User) {
         this.userService.addNewUser(newUser);
     }
 
-    @Put('replace-user')
+    @Put('/')
     replaceUser(newUser: User) {
         this.userService.replaceUser(newUser);
     }
 
-    @Patch('update-user')
+    @Patch('/')
     updateUser(newUser: User) {
         this.userService.updateUser(newUser);
     }
 
-    @Delete()
+    @Delete('/')
     deleteUserByEmail(@Query('email') email: string) {
         this.userService.deleteUser(email);
     }

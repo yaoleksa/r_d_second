@@ -37,38 +37,38 @@ let UsersController = class UsersController {
     }
 };
 __decorate([
-    Get('all'),
+    Get('/'),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", []),
     __metadata("design:returntype", Array)
 ], UsersController.prototype, "findAll", null);
 __decorate([
-    Post('new-user'),
+    Post('/'),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [User]),
     __metadata("design:returntype", void 0)
 ], UsersController.prototype, "createNewUser", null);
 __decorate([
-    Put('replace-user'),
+    Put('/'),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [User]),
     __metadata("design:returntype", void 0)
 ], UsersController.prototype, "replaceUser", null);
 __decorate([
-    Patch('update-user'),
+    Patch('/'),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [User]),
     __metadata("design:returntype", void 0)
 ], UsersController.prototype, "updateUser", null);
 __decorate([
-    Delete(),
+    Delete('/'),
     __param(0, Query('email')),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [String]),
     __metadata("design:returntype", void 0)
 ], UsersController.prototype, "deleteUserByEmail", null);
 UsersController = __decorate([
-    Controller('users'),
+    Controller(''),
     __metadata("design:paramtypes", [UserService])
 ], UsersController);
 export { UsersController };

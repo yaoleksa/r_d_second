@@ -18,7 +18,7 @@ async function executeHandler({
 }) {
   try {
     const method = controller[methodName];
-    const paramMeta = Reflect.getMetadata(Symbol('params'), controller, methodName) ?? [];
+    const paramMeta = Reflect.getMetadata('params', controller, methodName) ?? [];
 
     const args = [];
 
@@ -70,7 +70,7 @@ export class MiniNestFactory {
                             const result = await executeHandler({
                                 req,
                                 controller,
-                                methodName: route.handler,
+                                methodName: route.handlerName,
                                 container,
                             });
                         res.json(result);

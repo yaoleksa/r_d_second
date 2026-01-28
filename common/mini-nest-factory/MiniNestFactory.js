@@ -5,7 +5,7 @@ import { ParamType } from '../params/params.js';
 async function executeHandler({ req, controller, methodName, container, }) {
     try {
         const method = controller[methodName];
-        const paramMeta = Reflect.getMetadata(Symbol('params'), controller, methodName) ?? [];
+        const paramMeta = Reflect.getMetadata('params', controller, methodName) ?? [];
         const args = [];
         for (let i = 0; i < paramMeta.length; i++) {
             const { type, name } = paramMeta[i];
@@ -50,7 +50,7 @@ export class MiniNestFactory {
                         const result = await executeHandler({
                             req,
                             controller,
-                            methodName: route.handler,
+                            methodName: route.handlerName,
                             container,
                         });
                         res.json(result);
