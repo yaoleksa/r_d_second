@@ -3,6 +3,12 @@ import { User } from "./dto/userDTO.js";
 export declare class UserCheck {
     canActivate(ctx: ExecutionContext): boolean;
 }
+export declare class ParamTypeCheck {
+    canActivate(ctx: ExecutionContext): boolean;
+}
+export declare class EmailCheck {
+    canActivate(ctx: ExecutionContext): boolean;
+}
 export declare class UserService {
     private readonly users;
     retreiveAllUsers(): User[];

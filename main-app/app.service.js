@@ -4,6 +4,7 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
     else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
+import { HttpException } from "../common/exception/HttpException.js";
 import { Injectible } from "../common/ioc/Injectable.js";
 import { User } from "./dto/userDTO.js";
 let UserCheck = class UserCheck {
@@ -19,6 +20,30 @@ UserCheck = __decorate([
     Injectible()
 ], UserCheck);
 export { UserCheck };
+let ParamTypeCheck = class ParamTypeCheck {
+    canActivate(ctx) {
+        return typeof ctx.req.body.name === 'string' && typeof ctx.req.body.email === 'string';
+    }
+};
+ParamTypeCheck = __decorate([
+    Injectible()
+], ParamTypeCheck);
+export { ParamTypeCheck };
+let EmailCheck = class EmailCheck {
+    canActivate(ctx) {
+        if (ctx.req.query && ctx.req.query.email && !ctx.req.query?.email.match(new RegExp('(.+)@(.+)\\.(.+)'))) {
+            throw new HttpException(409, 'INVALID EMAIL FORMAT! [any-text]@[any-text].[any-text]');
+        }
+        else if (ctx.req.body && ctx.req.body.email && !ctx.req.body?.email.match(new RegExp('(.+)@(.+)\\.(.+)'))) {
+            throw new HttpException(409, 'INVALID EMAIL FORMAT! [any-text]@[any-text].[any-text]');
+        }
+        return true;
+    }
+};
+EmailCheck = __decorate([
+    Injectible()
+], EmailCheck);
+export { EmailCheck };
 let UserService = class UserService {
     users = [];
     // coresponding with the GET HTTP request

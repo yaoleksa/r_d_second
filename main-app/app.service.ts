@@ -1,3 +1,4 @@
+import { HttpException } from "../common/exception/HttpException.js";
 import { ExecutionContext } from "../common/guard/Guard.js";
 import { Injectible } from "../common/ioc/Injectable.js";
 import { User } from "./dto/userDTO.js";
@@ -10,6 +11,25 @@ export class UserCheck {
             ctx.req.body.email && 
             new User(ctx.req.body.name, ctx.req.body.email) && 
             Object.keys(ctx.req.body).length === 2);
+    }
+}
+
+@Injectible()
+export class ParamTypeCheck {
+    canActivate(ctx: ExecutionContext): boolean {
+        return typeof ctx.req.body.name === 'string' && typeof ctx.req.body.email === 'string';
+    }
+}
+
+@Injectible()
+export class EmailCheck {
+    canActivate(ctx: ExecutionContext): boolean {
+        if(ctx.req.query && ctx.req.query.email && !ctx.req.query?.email.match(new RegExp('(.+)@(.+)\\.(.+)'))) {
+            throw new HttpException(409, 'INVALID EMAIL FORMAT! [any-text]@[any-text].[any-text]');
+        } else if(ctx.req.body && ctx.req.body.email && !ctx.req.body?.email.match(new RegExp('(.+)@(.+)\\.(.+)'))) {
+            throw new HttpException(409, 'INVALID EMAIL FORMAT! [any-text]@[any-text].[any-text]');
+        }
+        return true;
     }
 }
 
