@@ -2,8 +2,26 @@ import express from 'express';
 import { container } from '../container/container.js';
 import { HttpException } from '../exception/HttpException.js';
 import { ParamType } from '../params/params.js';
+import { ExecutionContext } from '../guard/Guard.js';
+import { CanActive } from '../guard/Guard.js';
 
 import type { Request, Response } from 'express';
+
+function collectGuards(controller: any, method: string) {
+    const ctrlGuards = Reflect.getMetadata('guards', controller.constructor) ?? [];
+    const methodGuards = Reflect.getMetadata('guards', method);
+    return [...ctrlGuards, ...methodGuards];
+}
+
+async function runGuards(guards: any[], ctx: ExecutionContext, container: any) {
+    for(const guard_ of guards) {
+        const guard = container.resolve(guard_);
+        const allowed = await guard.canActive(ctx);
+        if(!allowed) {
+            throw new HttpException(403, 'Forbidden');
+        }
+    }
+}
 
 async function executeHandler({
   req,
@@ -36,6 +54,11 @@ async function executeHandler({
                 break;
         }
     }
+
+    // Apply guards
+    const guards = collectGuards(controller, methodName);
+    const ctx = new ExecutionContext(req, controller, method);
+    await runGuards(guards, ctx, container);
 
     return await method.apply(controller, args);
   } catch (e: any) {
