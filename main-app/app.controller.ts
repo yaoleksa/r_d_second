@@ -1,9 +1,11 @@
 import { Controller } from "../common/controller/Controller.js";
 import { Get, Post, Put, Patch, Delete } from "../common/http-layers/HttpLayers.js";
-import { UserService } from "./app.service.js";
+import { UserCheck, UserService } from "./app.service.js";
 import { User } from "./dto/userDTO.js";
 import { Query, Body } from "../common/params/params.js";
+import { Guard } from "../common/guard/Guard.js";
 
+@Guard(UserCheck)
 @Controller('')
 export class UsersController {
 

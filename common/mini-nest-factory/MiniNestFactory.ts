@@ -3,20 +3,19 @@ import { container } from '../container/container.js';
 import { HttpException } from '../exception/HttpException.js';
 import { ParamType } from '../params/params.js';
 import { ExecutionContext } from '../guard/Guard.js';
-import { CanActive } from '../guard/Guard.js';
 
 import type { Request, Response } from 'express';
 
 function collectGuards(controller: any, method: string) {
     const ctrlGuards = Reflect.getMetadata('guards', controller.constructor) ?? [];
-    const methodGuards = Reflect.getMetadata('guards', method);
+    const methodGuards = Reflect.getMetadata('guards', controller,  method) ?? [];
     return [...ctrlGuards, ...methodGuards];
 }
 
 async function runGuards(guards: any[], ctx: ExecutionContext, container: any) {
     for(const guard_ of guards) {
         const guard = container.resolve(guard_);
-        const allowed = await guard.canActive(ctx);
+        const allowed = await guard.canActivate(ctx);
         if(!allowed) {
             throw new HttpException(403, 'Forbidden');
         }

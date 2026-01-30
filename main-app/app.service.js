@@ -5,6 +5,20 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
 import { Injectible } from "../common/ioc/Injectable.js";
+import { User } from "./dto/userDTO.js";
+let UserCheck = class UserCheck {
+    canActivate(ctx) {
+        return !ctx.req.body ||
+            (ctx.req.body.name &&
+                ctx.req.body.email &&
+                new User(ctx.req.body.name, ctx.req.body.email) &&
+                Object.keys(ctx.req.body).length === 2);
+    }
+};
+UserCheck = __decorate([
+    Injectible()
+], UserCheck);
+export { UserCheck };
 let UserService = class UserService {
     users = [];
     // coresponding with the GET HTTP request

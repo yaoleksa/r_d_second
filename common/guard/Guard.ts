@@ -4,8 +4,8 @@ export class ExecutionContext {
 }
 
 // Guard contract interface
-export interface CanActive {
-    canActive(ctx: ExecutionContext): boolean | Promise<boolean>;
+export interface CanActivate {
+    сanActivate(ctx: ExecutionContext): boolean | Promise<boolean>;
 }
 
 export function Guard(...guards: any[]) {

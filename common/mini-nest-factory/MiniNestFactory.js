@@ -5,13 +5,13 @@ import { ParamType } from '../params/params.js';
 import { ExecutionContext } from '../guard/Guard.js';
 function collectGuards(controller, method) {
     const ctrlGuards = Reflect.getMetadata('guards', controller.constructor) ?? [];
-    const methodGuards = Reflect.getMetadata('guards', method);
+    const methodGuards = Reflect.getMetadata('guards', controller, method) ?? [];
     return [...ctrlGuards, ...methodGuards];
 }
 async function runGuards(guards, ctx, container) {
     for (const guard_ of guards) {
         const guard = container.resolve(guard_);
-        const allowed = await guard.canActive(ctx);
+        const allowed = await guard.canActivate(ctx);
         if (!allowed) {
             throw new HttpException(403, 'Forbidden');
         }

@@ -12,9 +12,10 @@ var __param = (this && this.__param) || function (paramIndex, decorator) {
 };
 import { Controller } from "../common/controller/Controller.js";
 import { Get, Post, Put, Patch, Delete } from "../common/http-layers/HttpLayers.js";
-import { UserService } from "./app.service.js";
+import { UserCheck, UserService } from "./app.service.js";
 import { User } from "./dto/userDTO.js";
 import { Query, Body } from "../common/params/params.js";
+import { Guard } from "../common/guard/Guard.js";
 let UsersController = class UsersController {
     userService;
     constructor(userService) {
@@ -71,6 +72,7 @@ __decorate([
     __metadata("design:returntype", void 0)
 ], UsersController.prototype, "deleteUserByEmail", null);
 UsersController = __decorate([
+    Guard(UserCheck),
     Controller(''),
     __metadata("design:paramtypes", [UserService])
 ], UsersController);

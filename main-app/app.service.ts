@@ -1,5 +1,17 @@
+import { ExecutionContext } from "../common/guard/Guard.js";
 import { Injectible } from "../common/ioc/Injectable.js";
 import { User } from "./dto/userDTO.js";
+
+@Injectible()
+export class UserCheck {
+    canActivate(ctx: ExecutionContext): boolean {
+        return !ctx.req.body || 
+        (ctx.req.body.name && 
+            ctx.req.body.email && 
+            new User(ctx.req.body.name, ctx.req.body.email) && 
+            Object.keys(ctx.req.body).length === 2);
+    }
+}
 
 @Injectible()
 export class UserService {
