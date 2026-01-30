@@ -9,7 +9,6 @@ export class UserCheck {
         return !ctx.req.body || 
         (ctx.req.body.name && 
             ctx.req.body.email && 
-            new User(ctx.req.body.name, ctx.req.body.email) && 
             Object.keys(ctx.req.body).length === 2);
     }
 }

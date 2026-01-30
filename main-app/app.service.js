@@ -6,13 +6,11 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 };
 import { HttpException } from "../common/exception/HttpException.js";
 import { Injectible } from "../common/ioc/Injectable.js";
-import { User } from "./dto/userDTO.js";
 let UserCheck = class UserCheck {
     canActivate(ctx) {
         return !ctx.req.body ||
             (ctx.req.body.name &&
                 ctx.req.body.email &&
-                new User(ctx.req.body.name, ctx.req.body.email) &&
                 Object.keys(ctx.req.body).length === 2);
     }
 };
