@@ -12,7 +12,7 @@ dotenv.config();
 let ApiKeyGuard = class ApiKeyGuard {
     canActivate(ctx) {
         // Compare headers API key with API key
-        return ctx.req.headers.authorization === process.env.X_API_Key;
+        return ctx.req.headers && JSON.parse(ctx.req.headers.authorization)['X-API-Key'] === process.env.X_API_Key;
     }
 };
 ApiKeyGuard = __decorate([
