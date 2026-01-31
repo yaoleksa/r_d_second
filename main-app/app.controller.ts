@@ -6,7 +6,7 @@ import { Query, Body } from "../common/params/params.js";
 import { Guard } from "../common/guard/Guard.js";
 import { Pipe } from "../common/pipe/Pipe.js";
 
-@Pipe()
+@Pipe(EmailCheck)
 @Controller('')
 export class UsersController {
 
@@ -19,28 +19,27 @@ export class UsersController {
 
     @Post('/')
     @Guard(ApiKeyGuard)
-    @Pipe(UserCheck, ParamTypeCheck, EmailCheck)
+    @Pipe(UserCheck, ParamTypeCheck)
     createNewUser(@Body() newUser: User) {
         this.userService.addNewUser(newUser);
     }
 
     @Put('/')
     @Guard(ApiKeyGuard)
-    @Pipe(UserCheck, ParamTypeCheck, EmailCheck)
+    @Pipe(UserCheck, ParamTypeCheck)
     replaceUser(@Body() newUser: User) {
         this.userService.replaceUser(newUser);
     }
 
     @Patch('/')
     @Guard(ApiKeyGuard)
-    @Pipe(UserCheck, ParamTypeCheck, EmailCheck)
+    @Pipe(UserCheck, ParamTypeCheck)
     updateUser(@Body() newUser: User) {
         this.userService.updateUser(newUser);
     }
 
     @Delete('/')
     @Guard(ApiKeyGuard)
-    @Pipe(EmailCheck)
     deleteUserByEmail(@Query('email') email: any) {
         this.userService.deleteUser(email);
     }
