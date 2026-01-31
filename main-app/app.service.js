@@ -6,6 +6,19 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 };
 import { HttpException } from "../common/exception/HttpException.js";
 import { Injectible } from "../common/ioc/Injectable.js";
+// Enable environment variables
+import * as dotenv from 'dotenv';
+dotenv.config();
+let ApiKeyGuard = class ApiKeyGuard {
+    canActivate(ctx) {
+        // Compare headers API key with API key
+        return ctx.req.headers.authorization === process.env.X_API_Key;
+    }
+};
+ApiKeyGuard = __decorate([
+    Injectible()
+], ApiKeyGuard);
+export { ApiKeyGuard };
 let UserCheck = class UserCheck {
     canActivate(ctx) {
         return !ctx.req.body ||

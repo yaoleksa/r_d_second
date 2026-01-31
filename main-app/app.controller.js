@@ -12,10 +12,11 @@ var __param = (this && this.__param) || function (paramIndex, decorator) {
 };
 import { Controller } from "../common/controller/Controller.js";
 import { Get, Post, Put, Patch, Delete } from "../common/http-layers/HttpLayers.js";
-import { UserCheck, UserService, ParamTypeCheck, EmailCheck } from "./app.service.js";
+import { ApiKeyGuard, UserService } from "./app.service.js";
 import { User } from "./dto/userDTO.js";
 import { Query, Body } from "../common/params/params.js";
 import { Guard } from "../common/guard/Guard.js";
+import { Pipe } from "../common/pipe/Pipe.js";
 let UsersController = class UsersController {
     userService;
     constructor(userService) {
@@ -45,7 +46,7 @@ __decorate([
 ], UsersController.prototype, "findAll", null);
 __decorate([
     Post('/'),
-    Guard(ParamTypeCheck, EmailCheck),
+    Guard(ApiKeyGuard),
     __param(0, Body()),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [User]),
@@ -53,7 +54,7 @@ __decorate([
 ], UsersController.prototype, "createNewUser", null);
 __decorate([
     Put('/'),
-    Guard(ParamTypeCheck, EmailCheck),
+    Guard(ApiKeyGuard),
     __param(0, Body()),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [User]),
@@ -61,7 +62,7 @@ __decorate([
 ], UsersController.prototype, "replaceUser", null);
 __decorate([
     Patch('/'),
-    Guard(ParamTypeCheck, EmailCheck),
+    Guard(ApiKeyGuard),
     __param(0, Body()),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [User]),
@@ -69,14 +70,14 @@ __decorate([
 ], UsersController.prototype, "updateUser", null);
 __decorate([
     Delete('/'),
-    Guard(EmailCheck),
+    Guard(ApiKeyGuard),
     __param(0, Query('email')),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [Object]),
     __metadata("design:returntype", void 0)
 ], UsersController.prototype, "deleteUserByEmail", null);
 UsersController = __decorate([
-    Guard(UserCheck),
+    Pipe(),
     Controller(''),
     __metadata("design:paramtypes", [UserService])
 ], UsersController);

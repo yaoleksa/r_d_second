@@ -1,5 +1,8 @@
 import { ExecutionContext } from "../common/guard/Guard.js";
 import { User } from "./dto/userDTO.js";
+export declare class ApiKeyGuard {
+    canActivate(ctx: ExecutionContext): boolean;
+}
 export declare class UserCheck {
     canActivate(ctx: ExecutionContext): boolean;
 }

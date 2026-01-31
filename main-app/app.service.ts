@@ -2,6 +2,17 @@ import { HttpException } from "../common/exception/HttpException.js";
 import { ExecutionContext } from "../common/guard/Guard.js";
 import { Injectible } from "../common/ioc/Injectable.js";
 import { User } from "./dto/userDTO.js";
+// Enable environment variables
+import * as dotenv from 'dotenv';
+dotenv.config();
+
+@Injectible()
+export class ApiKeyGuard {
+    canActivate(ctx: ExecutionContext): boolean {
+        // Compare headers API key with API key
+        return ctx.req.headers.authorization === process.env.X_API_Key;
+    }
+}
 
 @Injectible()
 export class UserCheck {
