@@ -21,7 +21,6 @@ ApiKeyGuard = __decorate([
 export { ApiKeyGuard };
 let UserCheck = class UserCheck {
     transform(value, ctx) {
-        console.log(value);
         if (!value.name || !value.email || Object.keys(value).length !== 2) {
             throw new HttpException(409, 'INVALID USER PAYLOAD! User object must have two fiels: name and email');
         }
@@ -33,7 +32,6 @@ UserCheck = __decorate([
 export { UserCheck };
 let ParamTypeCheck = class ParamTypeCheck {
     transform(value, ctx) {
-        console.log(value);
         if (typeof value?.name !== 'string' || typeof value?.email !== 'string') {
             throw new HttpException(400, 'Name and email fields must be a string');
         }
@@ -45,7 +43,12 @@ ParamTypeCheck = __decorate([
 export { ParamTypeCheck };
 let EmailCheck = class EmailCheck {
     transform(value, ctx) {
-        console.log(value);
+        if (value.email && !value.email.match(new RegExp('(.+)@(.+)\\.(.+)'))) {
+            throw new HttpException(400, 'INVALID EMAIL FORMAT! [any-text]@[any-text].[any-text]');
+        }
+        else if (typeof value === 'string' && !value.match(new RegExp('(.+)@(.+)\\.(.+)'))) {
+            throw new HttpException(400, 'INVALID EMAIL FORMAT! [any-text]@[any-text].[any-text]');
+        }
     }
 };
 EmailCheck = __decorate([
@@ -85,8 +88,13 @@ let UserService = class UserService {
     // coresponding with the DELETE HTTP request
     deleteUser(email) {
         for (let i = 0; i < this.users.length; i++) {
-            if (this.users[i]?.email === email) {
+            for (let j = 0; j < email.length; j++) {
+                console.log(email.charAt(j), this.users[j]?.email.charAt(j));
+            }
+            if (this.users[i]?.email.toString().trim() === email.toString().trim()) {
                 this.users.splice(i, 1);
+                i--;
+                console.log('?');
             }
         }
     }

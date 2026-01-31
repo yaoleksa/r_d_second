@@ -57,11 +57,11 @@ async function executeHandler({
     let value: any;
     for (const param of paramMeta) {
         switch(param.type) {
-            case ParamType.BODY:
-                args[param.index] = req.body;
-                break;
             case ParamType.QUERY:
                 args[param.index] = req.query[param.data];
+                break;
+            case ParamType.BODY:
+                args[param.index] = req.body;
                 break;
             case ParamType.PARAM:
                 args[param.index] = req.params[param.name];

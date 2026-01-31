@@ -36,7 +36,11 @@ export class ParamTypeCheck implements PipeTransform {
 @Injectible()
 export class EmailCheck implements PipeTransform {
     transform(value: any, ctx: ExecutionContext) {
-        console.log(value);
+        if(value.email && !value.email.match(new RegExp('(.+)@(.+)\\.(.+)'))) {
+            throw new HttpException(400, 'INVALID EMAIL FORMAT! [any-text]@[any-text].[any-text]');
+        } else if(typeof value === 'string' && !value.match(new RegExp('(.+)@(.+)\\.(.+)'))) {
+            throw new HttpException(400, 'INVALID EMAIL FORMAT! [any-text]@[any-text].[any-text]');
+        }
     }
 }
 
@@ -71,8 +75,12 @@ export class UserService {
     // coresponding with the DELETE HTTP request
     deleteUser(email: string) {
         for(let i = 0; i < this.users.length; i++) {
-            if(this.users[i]?.email === email) {
+            for(let j = 0; j < email.length; j++) {
+                console.log(email.charAt(j), this.users[j]?.email.charAt(j));
+            }
+            if(this.users[i]?.email.toString().trim() === email.toString().trim()) {
                 this.users.splice(i, 1);
+                i--; console.log('?');
             }
         }
     }

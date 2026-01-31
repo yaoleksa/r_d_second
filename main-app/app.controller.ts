@@ -19,27 +19,28 @@ export class UsersController {
 
     @Post('/')
     @Guard(ApiKeyGuard)
-    @Pipe(UserCheck, ParamTypeCheck)
+    @Pipe(UserCheck, ParamTypeCheck, EmailCheck)
     createNewUser(@Body() newUser: User) {
         this.userService.addNewUser(newUser);
     }
 
     @Put('/')
     @Guard(ApiKeyGuard)
-    @Pipe(UserCheck, ParamTypeCheck)
+    @Pipe(UserCheck, ParamTypeCheck, EmailCheck)
     replaceUser(@Body() newUser: User) {
         this.userService.replaceUser(newUser);
     }
 
     @Patch('/')
     @Guard(ApiKeyGuard)
-    @Pipe(UserCheck, ParamTypeCheck)
+    @Pipe(UserCheck, ParamTypeCheck, EmailCheck)
     updateUser(@Body() newUser: User) {
         this.userService.updateUser(newUser);
     }
 
     @Delete('/')
     @Guard(ApiKeyGuard)
+    @Pipe(EmailCheck)
     deleteUserByEmail(@Query('email') email: any) {
         this.userService.deleteUser(email);
     }
