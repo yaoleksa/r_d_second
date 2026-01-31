@@ -4,5 +4,6 @@ export interface ArgumentMetadata {
     readonly metatype?: any | undefined;
     readonly data?: string | undefined;
     readonly name?: string | undefined;
+    readonly pipes?: any[];
 }
 //# sourceMappingURL=types.d.ts.map

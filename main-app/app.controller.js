@@ -12,7 +12,7 @@ var __param = (this && this.__param) || function (paramIndex, decorator) {
 };
 import { Controller } from "../common/controller/Controller.js";
 import { Get, Post, Put, Patch, Delete } from "../common/http-layers/HttpLayers.js";
-import { ApiKeyGuard, UserService } from "./app.service.js";
+import { UserCheck, ApiKeyGuard, UserService, ParamTypeCheck } from "./app.service.js";
 import { User } from "./dto/userDTO.js";
 import { Query, Body } from "../common/params/params.js";
 import { Guard } from "../common/guard/Guard.js";
@@ -47,6 +47,7 @@ __decorate([
 __decorate([
     Post('/'),
     Guard(ApiKeyGuard),
+    Pipe(UserCheck, ParamTypeCheck),
     __param(0, Body()),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [User]),
@@ -55,6 +56,7 @@ __decorate([
 __decorate([
     Put('/'),
     Guard(ApiKeyGuard),
+    Pipe(UserCheck, ParamTypeCheck),
     __param(0, Body()),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [User]),
@@ -63,6 +65,7 @@ __decorate([
 __decorate([
     Patch('/'),
     Guard(ApiKeyGuard),
+    Pipe(UserCheck, ParamTypeCheck),
     __param(0, Body()),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [User]),

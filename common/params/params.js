@@ -9,7 +9,7 @@ export function Param(data) {
     return function (target, name, idx) {
         const ps = Reflect.getMetadata('design:paramtypes', target, name) ?? [];
         const metatype = ps[idx];
-        const params = Reflect.getMetadata('params', target.constructor) ?? [];
+        const params = Reflect.getMetadata('params', target, name) ?? [];
         params.push({
             index: idx,
             metatype,
@@ -21,31 +21,33 @@ export function Param(data) {
     };
 }
 ;
-export function Body() {
+export function Body(...pipes) {
     return function (target, name, idx) {
         const ps = Reflect.getMetadata('design:paramtypes', target, name) ?? [];
         const metatype = ps[idx];
-        const params = Reflect.getMetadata('params', target.constructor) ?? [];
+        const params = Reflect.getMetadata('params', target, name) ?? [];
         params.push({
             index: idx,
             metatype,
             type: ParamType.BODY,
-            name
+            name,
+            pipes
         });
         Reflect.defineMetadata('params', params, target, name);
     };
 }
-export function Query(data) {
+export function Query(data, ...pipes) {
     return function (target, name, idx) {
         const ps = Reflect.getMetadata('design:paramtypes', target, name) ?? [];
         const metatype = ps[idx];
-        const params = Reflect.getMetadata('params', target.constructor) ?? [];
+        const params = Reflect.getMetadata('params', target, name) ?? [];
         params.push({
             index: idx,
             metatype,
             type: ParamType.QUERY,
             data,
-            name
+            name,
+            pipes
         });
         Reflect.defineMetadata('params', params, target, name);
     };

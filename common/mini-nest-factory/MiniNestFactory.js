@@ -8,6 +8,11 @@ function collectGuards(controller, method) {
     const methodGuards = Reflect.getMetadata('guards', controller, method) ?? [];
     return [...ctrlGuards, ...methodGuards];
 }
+function collectPipes(controller, method) {
+    const ctrlPipe = Reflect.getMetadata('pipes', controller.constructor) ?? [];
+    const methodPipes = Reflect.getMetadata('pipes', controller, method) ?? [];
+    return [...ctrlPipe, ...methodPipes];
+}
 async function runGuards(guards, ctx, container) {
     for (const guard_ of guards) {
         const guard = container.resolve(guard_);
@@ -17,11 +22,21 @@ async function runGuards(guards, ctx, container) {
         }
     }
 }
+async function runPipes(pipes, ctx, container, value) {
+    for (const pipe_ of pipes) {
+        const pipe = container.resolve(pipe_);
+        pipe.transform(value, ctx);
+    }
+}
 async function executeHandler({ req, controller, methodName, container, }) {
     try {
         const method = controller[methodName];
         const paramMeta = Reflect.getMetadata('params', controller, methodName) ?? [];
         const args = [];
+        // define execution context
+        const ctx = new ExecutionContext(req, controller, method);
+        // Store body, parameter and query
+        let value;
         for (const param of paramMeta) {
             switch (param.type) {
                 case ParamType.BODY:
@@ -36,11 +51,14 @@ async function executeHandler({ req, controller, methodName, container, }) {
                 default:
                     break;
             }
+            value = args[param.index];
         }
         // Apply guards
         const guards = collectGuards(controller, methodName);
-        const ctx = new ExecutionContext(req, controller, method);
         await runGuards(guards, ctx, container);
+        // Apply pipes
+        const pipes = collectPipes(controller, methodName);
+        await runPipes(pipes, ctx, container, value);
         return await method.apply(controller, args);
     }
     catch (e) {

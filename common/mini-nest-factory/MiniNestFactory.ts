@@ -12,6 +12,12 @@ function collectGuards(controller: any, method: string) {
     return [...ctrlGuards, ...methodGuards];
 }
 
+function collectPipes(controller: any, method: any) {
+    const ctrlPipe = Reflect.getMetadata('pipes', controller.constructor) ?? [];
+    const methodPipes = Reflect.getMetadata('pipes', controller, method) ?? [];
+    return [...ctrlPipe, ...methodPipes];
+}
+
 async function runGuards(guards: any[], ctx: ExecutionContext, container: any) {
     for(const guard_ of guards) {
         const guard = container.resolve(guard_);
@@ -19,6 +25,13 @@ async function runGuards(guards: any[], ctx: ExecutionContext, container: any) {
         if(!allowed) {
             throw new HttpException(403, 'Forbidden');
         }
+    }
+}
+
+async function runPipes(pipes: any[], ctx: ExecutionContext, container: any, value: any) {
+    for(const pipe_ of pipes) {
+        const pipe = container.resolve(pipe_);
+        pipe.transform(value, ctx);
     }
 }
 
@@ -38,6 +51,10 @@ async function executeHandler({
     const paramMeta = Reflect.getMetadata('params', controller, methodName) ?? [];
 
     const args: any[] = [];
+    // define execution context
+    const ctx = new ExecutionContext(req, controller, method);
+    // Store body, parameter and query
+    let value: any;
     for (const param of paramMeta) {
         switch(param.type) {
             case ParamType.BODY:
@@ -52,12 +69,15 @@ async function executeHandler({
             default:
                 break;
         }
+        value= args[param.index];
     }
 
     // Apply guards
     const guards = collectGuards(controller, methodName);
-    const ctx = new ExecutionContext(req, controller, method);
     await runGuards(guards, ctx, container);
+    // Apply pipes
+    const pipes = collectPipes(controller, methodName);
+    await runPipes(pipes, ctx, container, value);
 
     return await method.apply(controller, args);
   } catch (e: any) {

@@ -12,7 +12,7 @@ dotenv.config();
 let ApiKeyGuard = class ApiKeyGuard {
     canActivate(ctx) {
         // Compare headers API key with API key
-        return ctx.req.headers && JSON.parse(ctx.req.headers.authorization)['X-API-Key'] === process.env.X_API_Key;
+        return ctx.req.headers.authorization && JSON.parse(ctx.req.headers.authorization)['X-API-Key'] === process.env.X_API_Key;
     }
 };
 ApiKeyGuard = __decorate([
@@ -20,11 +20,11 @@ ApiKeyGuard = __decorate([
 ], ApiKeyGuard);
 export { ApiKeyGuard };
 let UserCheck = class UserCheck {
-    canActivate(ctx) {
-        return !ctx.req.body ||
-            (ctx.req.body.name &&
-                ctx.req.body.email &&
-                Object.keys(ctx.req.body).length === 2);
+    transform(value, ctx) {
+        console.log(value);
+        if (!value.name || !value.email || Object.keys(value).length !== 2) {
+            throw new HttpException(409, 'INVALID USER PAYLOAD! User object must have two fiels: name and email');
+        }
     }
 };
 UserCheck = __decorate([
@@ -32,8 +32,11 @@ UserCheck = __decorate([
 ], UserCheck);
 export { UserCheck };
 let ParamTypeCheck = class ParamTypeCheck {
-    canActivate(ctx) {
-        return typeof ctx.req.body.name === 'string' && typeof ctx.req.body.email === 'string';
+    transform(value, ctx) {
+        console.log(value);
+        if (typeof value?.name !== 'string' || typeof value?.email !== 'string') {
+            throw new HttpException(400, 'Name and email fields must be a string');
+        }
     }
 };
 ParamTypeCheck = __decorate([
@@ -41,14 +44,8 @@ ParamTypeCheck = __decorate([
 ], ParamTypeCheck);
 export { ParamTypeCheck };
 let EmailCheck = class EmailCheck {
-    canActivate(ctx) {
-        if (ctx.req.query && ctx.req.query.email && !ctx.req.query?.email.match(new RegExp('(.+)@(.+)\\.(.+)'))) {
-            throw new HttpException(409, 'INVALID EMAIL FORMAT! [any-text]@[any-text].[any-text]');
-        }
-        else if (ctx.req.body && ctx.req.body.email && !ctx.req.body?.email.match(new RegExp('(.+)@(.+)\\.(.+)'))) {
-            throw new HttpException(409, 'INVALID EMAIL FORMAT! [any-text]@[any-text].[any-text]');
-        }
-        return true;
+    transform(value, ctx) {
+        console.log(value);
     }
 };
 EmailCheck = __decorate([

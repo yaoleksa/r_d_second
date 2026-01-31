@@ -1,16 +1,17 @@
 import { ExecutionContext } from "../common/guard/Guard.js";
 import { User } from "./dto/userDTO.js";
+import { PipeTransform } from "../common/pipe/Pipe.js";
 export declare class ApiKeyGuard {
     canActivate(ctx: ExecutionContext): boolean;
 }
-export declare class UserCheck {
-    canActivate(ctx: ExecutionContext): boolean;
+export declare class UserCheck implements PipeTransform {
+    transform(value: any, ctx: ExecutionContext): void;
 }
-export declare class ParamTypeCheck {
-    canActivate(ctx: ExecutionContext): boolean;
+export declare class ParamTypeCheck implements PipeTransform {
+    transform(value: any, ctx: ExecutionContext): void;
 }
-export declare class EmailCheck {
-    canActivate(ctx: ExecutionContext): boolean;
+export declare class EmailCheck implements PipeTransform {
+    transform(value: any, ctx: ExecutionContext): void;
 }
 export declare class UserService {
     private readonly users;

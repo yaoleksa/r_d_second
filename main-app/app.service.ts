@@ -2,6 +2,7 @@ import { HttpException } from "../common/exception/HttpException.js";
 import { ExecutionContext } from "../common/guard/Guard.js";
 import { Injectible } from "../common/ioc/Injectable.js";
 import { User } from "./dto/userDTO.js";
+import { PipeTransform } from "../common/pipe/Pipe.js";
 // Enable environment variables
 import * as dotenv from 'dotenv';
 dotenv.config();
@@ -10,36 +11,32 @@ dotenv.config();
 export class ApiKeyGuard {
     canActivate(ctx: ExecutionContext): boolean {
         // Compare headers API key with API key
-        return ctx.req.headers && JSON.parse(ctx.req.headers.authorization)['X-API-Key'] === process.env.X_API_Key;
+        return ctx.req.headers.authorization && JSON.parse(ctx.req.headers.authorization)['X-API-Key'] === process.env.X_API_Key;
     }
 }
 
 @Injectible()
-export class UserCheck {
-    canActivate(ctx: ExecutionContext): boolean {
-        return !ctx.req.body || 
-        (ctx.req.body.name && 
-            ctx.req.body.email && 
-            Object.keys(ctx.req.body).length === 2);
-    }
-}
-
-@Injectible()
-export class ParamTypeCheck {
-    canActivate(ctx: ExecutionContext): boolean {
-        return typeof ctx.req.body.name === 'string' && typeof ctx.req.body.email === 'string';
-    }
-}
-
-@Injectible()
-export class EmailCheck {
-    canActivate(ctx: ExecutionContext): boolean {
-        if(ctx.req.query && ctx.req.query.email && !ctx.req.query?.email.match(new RegExp('(.+)@(.+)\\.(.+)'))) {
-            throw new HttpException(409, 'INVALID EMAIL FORMAT! [any-text]@[any-text].[any-text]');
-        } else if(ctx.req.body && ctx.req.body.email && !ctx.req.body?.email.match(new RegExp('(.+)@(.+)\\.(.+)'))) {
-            throw new HttpException(409, 'INVALID EMAIL FORMAT! [any-text]@[any-text].[any-text]');
+export class UserCheck implements PipeTransform {
+    transform(value: any, ctx: ExecutionContext) {
+        if(!value.name || !value.email || Object.keys(value).length !== 2) {
+            throw new HttpException(409, 'INVALID USER PAYLOAD! User object must have two fiels: name and email');
         }
-        return true;
+    }
+}
+
+@Injectible()
+export class ParamTypeCheck implements PipeTransform {
+    transform(value: any, ctx: ExecutionContext) {
+        if(typeof value?.name !== 'string' || typeof value?.email !== 'string') {
+            throw new HttpException(400, 'Name and email fields must be a string');
+        }
+    }
+}
+
+@Injectible()
+export class EmailCheck implements PipeTransform {
+    transform(value: any, ctx: ExecutionContext) {
+        console.log(value);
     }
 }
 
