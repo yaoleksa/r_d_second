@@ -88,13 +88,9 @@ let UserService = class UserService {
     // coresponding with the DELETE HTTP request
     deleteUser(email) {
         for (let i = 0; i < this.users.length; i++) {
-            for (let j = 0; j < email.length; j++) {
-                console.log(email.charAt(j), this.users[j]?.email.charAt(j));
-            }
-            if (this.users[i]?.email.toString().trim() === email.toString().trim()) {
+            if (this.users[i]?.email == email) {
                 this.users.splice(i, 1);
                 i--;
-                console.log('?');
             }
         }
     }
