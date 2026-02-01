@@ -5,7 +5,7 @@ export var ParamType;
     ParamType[ParamType["QUERY"] = 1] = "QUERY";
     ParamType[ParamType["BODY"] = 2] = "BODY";
 })(ParamType || (ParamType = {}));
-export function Param(data) {
+export function Param(data, ...pipes) {
     return function (target, name, idx) {
         const ps = Reflect.getMetadata('design:paramtypes', target, name) ?? [];
         const metatype = ps[idx];
@@ -15,7 +15,8 @@ export function Param(data) {
             metatype,
             type: ParamType.PARAM,
             data,
-            name
+            name,
+            pipes
         });
         Reflect.defineMetadata('params', params, target, name);
     };

@@ -4,7 +4,7 @@ import { UserService } from "./app.service.js";
 import { ApiKeyGuard } from "./guards/guards.js";
 import { ParamTypeCheck, EmailCheck, ZodValidationPipe, creatueUserSchema } from "./pipes/pipes.js";
 import { User } from "./dto/userDTO.js";
-import { Query, Body } from "../common/params/params.js";
+import { Query, Body, Param } from "../common/params/params.js";
 import { Guard } from "../common/guard/Guard.js";
 import { Pipe } from "../common/pipe/Pipe.js";
 // import type for constructor pipe
@@ -21,30 +21,35 @@ export class UsersController {
         return this.userService.retreiveAllUsers();
     }
 
+    @Get('/:email')
+    findByEmail(@Param('email', EmailCheck) email: string) {
+        return this.userService.retreiveUserByEmail(email);
+    }
+
     @Post('/')
     @Guard(ApiKeyGuard)
     @Pipe(new ZodValidationPipe(creatueUserSchema))
-    createNewUser(@Body() newUser: CreateUserDto) {
-        this.userService.addNewUser(newUser);
+    createNewUser(@Body() newUser: CreateUserDto): string {
+        return this.userService.addNewUser(newUser);
     }
 
     @Put('/')
     @Guard(ApiKeyGuard)
     @Pipe(new ZodValidationPipe(creatueUserSchema))
-    replaceUser(@Body() newUser: CreateUserDto) {
-        this.userService.replaceUser(newUser);
+    replaceUser(@Body() newUser: CreateUserDto): string {
+        return this.userService.replaceUser(newUser);
     }
 
     @Patch('/')
     @Guard(ApiKeyGuard)
     @Pipe(new ZodValidationPipe(creatueUserSchema))
-    updateUser(@Body() newUser: CreateUserDto) {
-        this.userService.updateUser(newUser);
+    updateUser(@Body() newUser: CreateUserDto): string {
+        return this.userService.updateUser(newUser);
     }
 
     @Delete('/')
     @Guard(ApiKeyGuard)
-    deleteUserByEmail(@Query('email', EmailCheck) email: any) {
-        this.userService.deleteUser(email);
+    deleteUserByEmail(@Query('email', EmailCheck) email: any): string {
+        return this.userService.deleteUser(email);
     }
 }

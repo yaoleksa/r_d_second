@@ -15,7 +15,7 @@ import { Get, Post, Put, Patch, Delete } from "../common/http-layers/HttpLayers.
 import { UserService } from "./app.service.js";
 import { ApiKeyGuard } from "./guards/guards.js";
 import { ParamTypeCheck, EmailCheck, ZodValidationPipe, creatueUserSchema } from "./pipes/pipes.js";
-import { Query, Body } from "../common/params/params.js";
+import { Query, Body, Param } from "../common/params/params.js";
 import { Guard } from "../common/guard/Guard.js";
 import { Pipe } from "../common/pipe/Pipe.js";
 let UsersController = class UsersController {
@@ -26,17 +26,20 @@ let UsersController = class UsersController {
     findAll() {
         return this.userService.retreiveAllUsers();
     }
+    findByEmail(email) {
+        return this.userService.retreiveUserByEmail(email);
+    }
     createNewUser(newUser) {
-        this.userService.addNewUser(newUser);
+        return this.userService.addNewUser(newUser);
     }
     replaceUser(newUser) {
-        this.userService.replaceUser(newUser);
+        return this.userService.replaceUser(newUser);
     }
     updateUser(newUser) {
-        this.userService.updateUser(newUser);
+        return this.userService.updateUser(newUser);
     }
     deleteUserByEmail(email) {
-        this.userService.deleteUser(email);
+        return this.userService.deleteUser(email);
     }
 };
 __decorate([
@@ -46,13 +49,20 @@ __decorate([
     __metadata("design:returntype", Array)
 ], UsersController.prototype, "findAll", null);
 __decorate([
+    Get('/:email'),
+    __param(0, Param('email', EmailCheck)),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [String]),
+    __metadata("design:returntype", void 0)
+], UsersController.prototype, "findByEmail", null);
+__decorate([
     Post('/'),
     Guard(ApiKeyGuard),
     Pipe(new ZodValidationPipe(creatueUserSchema)),
     __param(0, Body()),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [Object]),
-    __metadata("design:returntype", void 0)
+    __metadata("design:returntype", String)
 ], UsersController.prototype, "createNewUser", null);
 __decorate([
     Put('/'),
@@ -61,7 +71,7 @@ __decorate([
     __param(0, Body()),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [Object]),
-    __metadata("design:returntype", void 0)
+    __metadata("design:returntype", String)
 ], UsersController.prototype, "replaceUser", null);
 __decorate([
     Patch('/'),
@@ -70,7 +80,7 @@ __decorate([
     __param(0, Body()),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [Object]),
-    __metadata("design:returntype", void 0)
+    __metadata("design:returntype", String)
 ], UsersController.prototype, "updateUser", null);
 __decorate([
     Delete('/'),
@@ -78,7 +88,7 @@ __decorate([
     __param(0, Query('email', EmailCheck)),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [Object]),
-    __metadata("design:returntype", void 0)
+    __metadata("design:returntype", String)
 ], UsersController.prototype, "deleteUserByEmail", null);
 UsersController = __decorate([
     Controller(''),

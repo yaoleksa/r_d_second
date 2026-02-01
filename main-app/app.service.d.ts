@@ -1,10 +1,12 @@
 import { User } from "./dto/userDTO.js";
 export declare class UserService {
     private readonly users;
+    private readonly unsuccessfulMessage;
     retreiveAllUsers(): User[];
-    addNewUser(newUser: User): void;
-    replaceUser(renewUser: User): void;
-    updateUser(updatedUser: User): void;
-    deleteUser(email: string): void;
+    retreiveUserByEmail(email: string): any;
+    addNewUser(newUser: User): string;
+    replaceUser(renewUser: User): string;
+    updateUser(updatedUser: User): string;
+    deleteUser(email: string): string;
 }
 //# sourceMappingURL=app.service.d.ts.map
