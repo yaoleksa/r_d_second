@@ -7,7 +7,7 @@ import { ZodSchema, z } from "zod/v3";
 @Injectible()
 export class ParamTypeCheck implements PipeTransform {
     transform(value: any, ctx: ExecutionContext) {
-        if(typeof value?.name !== 'string' || typeof value?.email !== 'string') {
+        if(value && (typeof value?.name !== 'string' || typeof value?.email !== 'string')) {
             throw new HttpException(400, 'Name and email fields must be a string');
         }
     }
@@ -28,6 +28,9 @@ export class EmailCheck implements PipeTransform {
 export class ZodValidationPipe implements PipeTransform {
     constructor(private zodSchema: ZodSchema) {}
     transform(value: any, ctx: ExecutionContext) {
+        if(!value.name || !value.email || Object.keys(value).length !== 2) {
+            throw new HttpException(400, 'INVALID USER PAYLOAD! User object must have two fiels: name and email');
+        }
         try {
             return this.zodSchema.parse(value);
         } catch(err) {
@@ -35,3 +38,10 @@ export class ZodValidationPipe implements PipeTransform {
         }
     }
 }
+
+export const creatueUserSchema = z.object({
+    name: z.string(),
+    email: z.string()
+}).required();
+
+export type CreateUserDto = z.infer<typeof creatueUserSchema>;

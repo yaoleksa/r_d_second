@@ -14,8 +14,7 @@ import { Controller } from "../common/controller/Controller.js";
 import { Get, Post, Put, Patch, Delete } from "../common/http-layers/HttpLayers.js";
 import { UserService } from "./app.service.js";
 import { ApiKeyGuard } from "./guards/guards.js";
-import { ParamTypeCheck } from "./pipes/pipes.js";
-import { User } from "./dto/userDTO.js";
+import { ParamTypeCheck, ZodValidationPipe, creatueUserSchema } from "./pipes/pipes.js";
 import { Query, Body } from "../common/params/params.js";
 import { Guard } from "../common/guard/Guard.js";
 import { Pipe } from "../common/pipe/Pipe.js";
@@ -27,6 +26,7 @@ let UsersController = class UsersController {
     findAll() {
         return this.userService.retreiveAllUsers();
     }
+    //@Pipe(new ZodValidationPipe(creatueUserSchema))
     createNewUser(newUser) {
         this.userService.addNewUser(newUser);
     }
@@ -48,29 +48,30 @@ __decorate([
 ], UsersController.prototype, "findAll", null);
 __decorate([
     Post('/'),
-    Guard(ApiKeyGuard),
-    Pipe(ParamTypeCheck),
+    Guard(ApiKeyGuard)
+    //@Pipe(new ZodValidationPipe(creatueUserSchema))
+    ,
     __param(0, Body()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [User]),
+    __metadata("design:paramtypes", [Object]),
     __metadata("design:returntype", void 0)
 ], UsersController.prototype, "createNewUser", null);
 __decorate([
     Put('/'),
     Guard(ApiKeyGuard),
-    Pipe(ParamTypeCheck),
+    Pipe(new ZodValidationPipe(creatueUserSchema)),
     __param(0, Body()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [User]),
+    __metadata("design:paramtypes", [Object]),
     __metadata("design:returntype", void 0)
 ], UsersController.prototype, "replaceUser", null);
 __decorate([
     Patch('/'),
     Guard(ApiKeyGuard),
-    Pipe(ParamTypeCheck),
+    Pipe(new ZodValidationPipe(creatueUserSchema)),
     __param(0, Body()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [User]),
+    __metadata("design:paramtypes", [Object]),
     __metadata("design:returntype", void 0)
 ], UsersController.prototype, "updateUser", null);
 __decorate([
@@ -83,6 +84,7 @@ __decorate([
 ], UsersController.prototype, "deleteUserByEmail", null);
 UsersController = __decorate([
     Controller(''),
+    Pipe(ParamTypeCheck),
     __metadata("design:paramtypes", [UserService])
 ], UsersController);
 export { UsersController };

@@ -2,13 +2,16 @@ import { Controller } from "../common/controller/Controller.js";
 import { Get, Post, Put, Patch, Delete } from "../common/http-layers/HttpLayers.js";
 import { UserService } from "./app.service.js";
 import { ApiKeyGuard } from "./guards/guards.js";
-import { ParamTypeCheck, EmailCheck, ZodValidationPipe } from "./pipes/pipes.js";
+import { ParamTypeCheck, EmailCheck, ZodValidationPipe, creatueUserSchema } from "./pipes/pipes.js";
 import { User } from "./dto/userDTO.js";
 import { Query, Body } from "../common/params/params.js";
 import { Guard } from "../common/guard/Guard.js";
 import { Pipe } from "../common/pipe/Pipe.js";
+// import type for constructor pipe
+import type { CreateUserDto } from "./pipes/pipes.js";
 
 @Controller('')
+@Pipe(ParamTypeCheck)
 export class UsersController {
 
     constructor(private userService: UserService) {}
@@ -20,22 +23,22 @@ export class UsersController {
 
     @Post('/')
     @Guard(ApiKeyGuard)
-    @Pipe(ParamTypeCheck)
-    createNewUser(@Body() newUser: User) {
+    //@Pipe(new ZodValidationPipe(creatueUserSchema))
+    createNewUser(@Body() newUser: CreateUserDto) {
         this.userService.addNewUser(newUser);
     }
 
     @Put('/')
     @Guard(ApiKeyGuard)
-    @Pipe(ParamTypeCheck)
-    replaceUser(@Body() newUser: User) {
+    @Pipe(new ZodValidationPipe(creatueUserSchema))
+    replaceUser(@Body() newUser: CreateUserDto) {
         this.userService.replaceUser(newUser);
     }
 
     @Patch('/')
     @Guard(ApiKeyGuard)
-    @Pipe(ParamTypeCheck)
-    updateUser(@Body() newUser: User) {
+    @Pipe(new ZodValidationPipe(creatueUserSchema))
+    updateUser(@Body() newUser: CreateUserDto) {
         this.userService.updateUser(newUser);
     }
 

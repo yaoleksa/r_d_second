@@ -1,6 +1,6 @@
 import { ExecutionContext } from "../../common/guard/Guard.js";
 import { PipeTransform } from "../../common/pipe/Pipe.js";
-import { ZodSchema } from "zod/v3";
+import { ZodSchema, z } from "zod/v3";
 export declare class ParamTypeCheck implements PipeTransform {
     transform(value: any, ctx: ExecutionContext): void;
 }
@@ -12,4 +12,15 @@ export declare class ZodValidationPipe implements PipeTransform {
     constructor(zodSchema: ZodSchema);
     transform(value: any, ctx: ExecutionContext): any;
 }
+export declare const creatueUserSchema: z.ZodObject<{
+    name: z.ZodString;
+    email: z.ZodString;
+}, "strip", z.ZodTypeAny, {
+    email: string;
+    name: string;
+}, {
+    email: string;
+    name: string;
+}>;
+export type CreateUserDto = z.infer<typeof creatueUserSchema>;
 //# sourceMappingURL=pipes.d.ts.map

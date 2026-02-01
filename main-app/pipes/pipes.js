@@ -9,10 +9,10 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 };
 import { Injectible } from "../../common/ioc/Injectable.js";
 import { HttpException } from "../../common/exception/HttpException.js";
-import { ZodSchema } from "zod/v3";
+import { ZodSchema, z } from "zod/v3";
 let ParamTypeCheck = class ParamTypeCheck {
     transform(value, ctx) {
-        if (typeof value?.name !== 'string' || typeof value?.email !== 'string') {
+        if (value && (typeof value?.name !== 'string' || typeof value?.email !== 'string')) {
             throw new HttpException(400, 'Name and email fields must be a string');
         }
     }
@@ -41,6 +41,9 @@ let ZodValidationPipe = class ZodValidationPipe {
         this.zodSchema = zodSchema;
     }
     transform(value, ctx) {
+        if (!value.name || !value.email || Object.keys(value).length !== 2) {
+            throw new HttpException(400, 'INVALID USER PAYLOAD! User object must have two fiels: name and email');
+        }
         try {
             return this.zodSchema.parse(value);
         }
@@ -54,4 +57,8 @@ ZodValidationPipe = __decorate([
     __metadata("design:paramtypes", [ZodSchema])
 ], ZodValidationPipe);
 export { ZodValidationPipe };
+export const creatueUserSchema = z.object({
+    name: z.string(),
+    email: z.string()
+}).required();
 //# sourceMappingURL=pipes.js.map
