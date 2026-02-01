@@ -12,7 +12,7 @@ import { HttpException } from "../../common/exception/HttpException.js";
 import { ZodSchema, z } from "zod/v3";
 let ParamTypeCheck = class ParamTypeCheck {
     transform(value, ctx) {
-        if (value && (typeof value?.name !== 'string' || typeof value?.email !== 'string')) {
+        if (value && typeof value !== 'string' && (typeof value?.name !== 'string' || typeof value?.email !== 'string')) {
             throw new HttpException(400, 'Name and email fields must be a string');
         }
     }

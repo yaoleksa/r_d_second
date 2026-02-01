@@ -51,6 +51,7 @@ async function executeHandler({
     const paramMeta = Reflect.getMetadata('params', controller, methodName) ?? [];
 
     const args: any[] = [];
+    const pipes: any[] = [];
     // define execution context
     const ctx = new ExecutionContext(req, controller, method);
     // Store body, parameter and query
@@ -70,13 +71,16 @@ async function executeHandler({
                 break;
         }
         value= args[param.index];
+        if(param.pipes.length > 0) {
+            pipes.push(...param.pipes);
+        }
     }
 
     // Apply guards
     const guards = collectGuards(controller, methodName);
     await runGuards(guards, ctx, container);
     // Apply pipes
-    const pipes = collectPipes(controller, methodName);
+    pipes.push(...collectPipes(controller, methodName));
     await runPipes(pipes, ctx, container, value);
 
     return await method.apply(controller, args);

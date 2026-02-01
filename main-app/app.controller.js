@@ -14,7 +14,7 @@ import { Controller } from "../common/controller/Controller.js";
 import { Get, Post, Put, Patch, Delete } from "../common/http-layers/HttpLayers.js";
 import { UserService } from "./app.service.js";
 import { ApiKeyGuard } from "./guards/guards.js";
-import { ParamTypeCheck, ZodValidationPipe, creatueUserSchema } from "./pipes/pipes.js";
+import { ParamTypeCheck, EmailCheck, ZodValidationPipe, creatueUserSchema } from "./pipes/pipes.js";
 import { Query, Body } from "../common/params/params.js";
 import { Guard } from "../common/guard/Guard.js";
 import { Pipe } from "../common/pipe/Pipe.js";
@@ -57,7 +57,7 @@ __decorate([
 __decorate([
     Put('/'),
     Guard(ApiKeyGuard),
-    Pipe(ZodValidationPipe),
+    Pipe(new ZodValidationPipe(creatueUserSchema)),
     __param(0, Body()),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [Object]),
@@ -66,7 +66,7 @@ __decorate([
 __decorate([
     Patch('/'),
     Guard(ApiKeyGuard),
-    Pipe(ZodValidationPipe),
+    Pipe(new ZodValidationPipe(creatueUserSchema)),
     __param(0, Body()),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [Object]),
@@ -75,7 +75,7 @@ __decorate([
 __decorate([
     Delete('/'),
     Guard(ApiKeyGuard),
-    __param(0, Query('email')),
+    __param(0, Query('email', EmailCheck)),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [Object]),
     __metadata("design:returntype", void 0)

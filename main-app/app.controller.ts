@@ -30,21 +30,21 @@ export class UsersController {
 
     @Put('/')
     @Guard(ApiKeyGuard)
-    @Pipe(ZodValidationPipe)
+    @Pipe(new ZodValidationPipe(creatueUserSchema))
     replaceUser(@Body() newUser: CreateUserDto) {
         this.userService.replaceUser(newUser);
     }
 
     @Patch('/')
     @Guard(ApiKeyGuard)
-    @Pipe(ZodValidationPipe)
+    @Pipe(new ZodValidationPipe(creatueUserSchema))
     updateUser(@Body() newUser: CreateUserDto) {
         this.userService.updateUser(newUser);
     }
 
     @Delete('/')
     @Guard(ApiKeyGuard)
-    deleteUserByEmail(@Query('email') email: any) {
+    deleteUserByEmail(@Query('email', EmailCheck) email: any) {
         this.userService.deleteUser(email);
     }
 }

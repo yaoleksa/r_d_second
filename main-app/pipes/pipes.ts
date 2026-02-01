@@ -7,7 +7,7 @@ import { ZodSchema, z } from "zod/v3";
 @Injectible()
 export class ParamTypeCheck implements PipeTransform {
     transform(value: any, ctx: ExecutionContext) {
-        if(value && (typeof value?.name !== 'string' || typeof value?.email !== 'string')) {
+        if(value && typeof value !== 'string' && (typeof value?.name !== 'string' || typeof value?.email !== 'string')) {
             throw new HttpException(400, 'Name and email fields must be a string');
         }
     }
