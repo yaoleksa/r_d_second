@@ -12,7 +12,9 @@ var __param = (this && this.__param) || function (paramIndex, decorator) {
 };
 import { Controller } from "../common/controller/Controller.js";
 import { Get, Post, Put, Patch, Delete } from "../common/http-layers/HttpLayers.js";
-import { UserCheck, ApiKeyGuard, UserService, ParamTypeCheck, EmailCheck } from "./app.service.js";
+import { UserService } from "./app.service.js";
+import { ApiKeyGuard } from "./guards/guards.js";
+import { ParamTypeCheck } from "./pipes/pipes.js";
 import { User } from "./dto/userDTO.js";
 import { Query, Body } from "../common/params/params.js";
 import { Guard } from "../common/guard/Guard.js";
@@ -47,7 +49,7 @@ __decorate([
 __decorate([
     Post('/'),
     Guard(ApiKeyGuard),
-    Pipe(UserCheck, ParamTypeCheck, EmailCheck),
+    Pipe(ParamTypeCheck),
     __param(0, Body()),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [User]),
@@ -56,7 +58,7 @@ __decorate([
 __decorate([
     Put('/'),
     Guard(ApiKeyGuard),
-    Pipe(UserCheck, ParamTypeCheck, EmailCheck),
+    Pipe(ParamTypeCheck),
     __param(0, Body()),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [User]),
@@ -65,7 +67,7 @@ __decorate([
 __decorate([
     Patch('/'),
     Guard(ApiKeyGuard),
-    Pipe(UserCheck, ParamTypeCheck, EmailCheck),
+    Pipe(ParamTypeCheck),
     __param(0, Body()),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [User]),
@@ -74,14 +76,12 @@ __decorate([
 __decorate([
     Delete('/'),
     Guard(ApiKeyGuard),
-    Pipe(EmailCheck),
     __param(0, Query('email')),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [Object]),
     __metadata("design:returntype", void 0)
 ], UsersController.prototype, "deleteUserByEmail", null);
 UsersController = __decorate([
-    Pipe(),
     Controller(''),
     __metadata("design:paramtypes", [UserService])
 ], UsersController);

@@ -4,57 +4,7 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
     else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
-import { HttpException } from "../common/exception/HttpException.js";
 import { Injectible } from "../common/ioc/Injectable.js";
-// Enable environment variables
-import * as dotenv from 'dotenv';
-dotenv.config();
-let ApiKeyGuard = class ApiKeyGuard {
-    canActivate(ctx) {
-        // Compare headers API key with API key
-        return ctx.req.headers.authorization && JSON.parse(ctx.req.headers.authorization)['X-API-Key'] === process.env.X_API_Key;
-    }
-};
-ApiKeyGuard = __decorate([
-    Injectible()
-], ApiKeyGuard);
-export { ApiKeyGuard };
-let UserCheck = class UserCheck {
-    transform(value, ctx) {
-        if (!value.name || !value.email || Object.keys(value).length !== 2) {
-            throw new HttpException(409, 'INVALID USER PAYLOAD! User object must have two fiels: name and email');
-        }
-    }
-};
-UserCheck = __decorate([
-    Injectible()
-], UserCheck);
-export { UserCheck };
-let ParamTypeCheck = class ParamTypeCheck {
-    transform(value, ctx) {
-        if (typeof value?.name !== 'string' || typeof value?.email !== 'string') {
-            throw new HttpException(400, 'Name and email fields must be a string');
-        }
-    }
-};
-ParamTypeCheck = __decorate([
-    Injectible()
-], ParamTypeCheck);
-export { ParamTypeCheck };
-let EmailCheck = class EmailCheck {
-    transform(value, ctx) {
-        if (value.email && !value.email.match(new RegExp('(.+)@(.+)\\.(.+)'))) {
-            throw new HttpException(400, 'INVALID EMAIL FORMAT! [any-text]@[any-text].[any-text]');
-        }
-        else if (typeof value === 'string' && !value.match(new RegExp('(.+)@(.+)\\.(.+)'))) {
-            throw new HttpException(400, 'INVALID EMAIL FORMAT! [any-text]@[any-text].[any-text]');
-        }
-    }
-};
-EmailCheck = __decorate([
-    Injectible()
-], EmailCheck);
-export { EmailCheck };
 let UserService = class UserService {
     users = [];
     // coresponding with the GET HTTP request
