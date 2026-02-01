@@ -47,7 +47,7 @@ async function executeHandler({ req, controller, methodName, container, }) {
                     args[param.index] = req.body;
                     break;
                 case ParamType.PARAM:
-                    args[param.index] = req.params[param.name];
+                    args[param.index] = req.params[param.data];
                     break;
                 default:
                     break;
