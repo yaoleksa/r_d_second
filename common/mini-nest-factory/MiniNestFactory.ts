@@ -29,12 +29,10 @@ async function runGuards(guards: any[], ctx: ExecutionContext, container: any) {
 }
 
 async function runPipes(pipes: any[], ctx: ExecutionContext, container: any, value: any) {
-  let result = value;
-  for (const pipe_ of pipes) {
+  for(const pipe_ of pipes) {
     const pipe = typeof pipe_ === 'function' ? container.resolve(pipe_) : pipe_;
-    result = await pipe.transform(result, ctx);
+    pipe.transform(value, ctx);
   }
-  return result;
 }
 
 async function executeHandler({

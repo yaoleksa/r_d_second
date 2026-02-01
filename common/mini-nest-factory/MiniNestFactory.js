@@ -23,12 +23,10 @@ async function runGuards(guards, ctx, container) {
     }
 }
 async function runPipes(pipes, ctx, container, value) {
-    let result = value;
     for (const pipe_ of pipes) {
         const pipe = typeof pipe_ === 'function' ? container.resolve(pipe_) : pipe_;
-        result = await pipe.transform(result, ctx);
+        pipe.transform(value, ctx);
     }
-    return result;
 }
 async function executeHandler({ req, controller, methodName, container, }) {
     try {

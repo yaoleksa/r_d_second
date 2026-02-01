@@ -23,21 +23,21 @@ export class UsersController {
 
     @Post('/')
     @Guard(ApiKeyGuard)
-    //@Pipe(new ZodValidationPipe(creatueUserSchema))
+    @Pipe(new ZodValidationPipe(creatueUserSchema))
     createNewUser(@Body() newUser: CreateUserDto) {
         this.userService.addNewUser(newUser);
     }
 
     @Put('/')
     @Guard(ApiKeyGuard)
-    @Pipe(new ZodValidationPipe(creatueUserSchema))
+    @Pipe(ZodValidationPipe)
     replaceUser(@Body() newUser: CreateUserDto) {
         this.userService.replaceUser(newUser);
     }
 
     @Patch('/')
     @Guard(ApiKeyGuard)
-    @Pipe(new ZodValidationPipe(creatueUserSchema))
+    @Pipe(ZodValidationPipe)
     updateUser(@Body() newUser: CreateUserDto) {
         this.userService.updateUser(newUser);
     }

@@ -26,7 +26,6 @@ let UsersController = class UsersController {
     findAll() {
         return this.userService.retreiveAllUsers();
     }
-    //@Pipe(new ZodValidationPipe(creatueUserSchema))
     createNewUser(newUser) {
         this.userService.addNewUser(newUser);
     }
@@ -48,9 +47,8 @@ __decorate([
 ], UsersController.prototype, "findAll", null);
 __decorate([
     Post('/'),
-    Guard(ApiKeyGuard)
-    //@Pipe(new ZodValidationPipe(creatueUserSchema))
-    ,
+    Guard(ApiKeyGuard),
+    Pipe(new ZodValidationPipe(creatueUserSchema)),
     __param(0, Body()),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [Object]),
@@ -59,7 +57,7 @@ __decorate([
 __decorate([
     Put('/'),
     Guard(ApiKeyGuard),
-    Pipe(new ZodValidationPipe(creatueUserSchema)),
+    Pipe(ZodValidationPipe),
     __param(0, Body()),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [Object]),
@@ -68,7 +66,7 @@ __decorate([
 __decorate([
     Patch('/'),
     Guard(ApiKeyGuard),
-    Pipe(new ZodValidationPipe(creatueUserSchema)),
+    Pipe(ZodValidationPipe),
     __param(0, Body()),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [Object]),
