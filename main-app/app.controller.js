@@ -60,7 +60,6 @@ __decorate([
 __decorate([
     Post('/'),
     Pipe(new ZodValidationPipe(creatueUserSchema)),
-    Guard(ApiKeyGuard),
     __param(0, Body()),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [Object]),
@@ -69,7 +68,6 @@ __decorate([
 __decorate([
     Put('/'),
     Pipe(new ZodValidationPipe(creatueUserSchema)),
-    Guard(ApiKeyGuard),
     __param(0, Body()),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [Object]),
@@ -78,7 +76,6 @@ __decorate([
 __decorate([
     Patch('/'),
     Pipe(new ZodValidationPipe(creatueUserSchema)),
-    Guard(ApiKeyGuard),
     __param(0, Body()),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [Object]),
@@ -86,7 +83,6 @@ __decorate([
 ], UsersController.prototype, "updateUser", null);
 __decorate([
     Delete('/'),
-    Guard(ApiKeyGuard),
     __param(0, Query('email', EmailCheck)),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [Object]),
@@ -95,6 +91,7 @@ __decorate([
 UsersController = __decorate([
     Controller(''),
     Pipe(ParamTypeCheck),
+    Guard(ApiKeyGuard),
     Interceptor(LoggingInterceptor),
     __metadata("design:paramtypes", [UserService])
 ], UsersController);

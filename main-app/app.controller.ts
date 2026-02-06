@@ -14,6 +14,7 @@ import type { CreateUserDto } from "./pipes/pipes.js";
 
 @Controller('')
 @Pipe(ParamTypeCheck)
+@Guard(ApiKeyGuard)
 @Interceptor(LoggingInterceptor)
 export class UsersController {
 
@@ -31,27 +32,23 @@ export class UsersController {
 
     @Post('/')
     @Pipe(new ZodValidationPipe(creatueUserSchema))
-    @Guard(ApiKeyGuard)
     createNewUser(@Body() newUser: CreateUserDto): string {
         return this.userService.addNewUser(newUser);
     }
 
     @Put('/')
     @Pipe(new ZodValidationPipe(creatueUserSchema))
-    @Guard(ApiKeyGuard)
     replaceUser(@Body() newUser: CreateUserDto): string {
         return this.userService.replaceUser(newUser);
     }
 
     @Patch('/')
     @Pipe(new ZodValidationPipe(creatueUserSchema))
-    @Guard(ApiKeyGuard)
     updateUser(@Body() newUser: CreateUserDto): string {
         return this.userService.updateUser(newUser);
     }
 
     @Delete('/')
-    @Guard(ApiKeyGuard)
     deleteUserByEmail(@Query('email', EmailCheck) email: any): string {
         return this.userService.deleteUser(email);
     }
