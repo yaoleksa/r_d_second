@@ -51,7 +51,7 @@ async function runFilters(filters: any[], ctx: ExecutionContext, container: any,
     for(const filter_ of filters) {
         const filter = typeof filter_ === 'function' ? container.resolve(filter_) : filter_;
         const result = await filter.catch(error, ctx);
-        if(result !== undefined) {
+        if(typeof result !== 'undefined') {
             return result;
         }
     }
@@ -152,6 +152,8 @@ export class MiniNestFactory {
                 app[route.method.toLowerCase()](
                 prefix + route.path,
                 async (req: Request, res: Response) => {
+                    const filters = await collectFilters(controller, route.handlerName);
+                    const ctx = new ExecutionContext(req, controller, route.handlerName);
                         try {
                             const result = await executeHandler({
                                 req,
@@ -162,7 +164,14 @@ export class MiniNestFactory {
                             });
                         res.json(result);
                         } catch (e: any) {
-                            res.status(e.status ?? 500).json({ message: e.message });
+                            const filteredResult = await runFilters(filters, ctx, container, e);
+                            if(typeof filteredResult !== 'undefined') {
+                                res.json(filteredResult);
+                                return;
+                            }
+                            res.status(e.status ?? 500).json({
+                                message: e.message
+                            });
                         }
                     },
                 );
