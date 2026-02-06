@@ -7,11 +7,14 @@ import { User } from "./dto/userDTO.js";
 import { Query, Body, Param } from "../common/params/params.js";
 import { Guard } from "../common/guard/Guard.js";
 import { Pipe } from "../common/pipe/Pipe.js";
+import { LoggingInterceptor } from "./interceptors/LoggingInterceptor.js";
+import { Interceptor } from "../common/interceptor/Interceptor.js";
 // import type for constructor pipe
 import type { CreateUserDto } from "./pipes/pipes.js";
 
 @Controller('')
 @Pipe(ParamTypeCheck)
+@Interceptor(LoggingInterceptor)
 export class UsersController {
 
     constructor(private userService: UserService) {}

@@ -18,6 +18,8 @@ import { ParamTypeCheck, EmailCheck, ZodValidationPipe, creatueUserSchema } from
 import { Query, Body, Param } from "../common/params/params.js";
 import { Guard } from "../common/guard/Guard.js";
 import { Pipe } from "../common/pipe/Pipe.js";
+import { LoggingInterceptor } from "./interceptors/LoggingInterceptor.js";
+import { Interceptor } from "../common/interceptor/Interceptor.js";
 let UsersController = class UsersController {
     userService;
     constructor(userService) {
@@ -93,6 +95,7 @@ __decorate([
 UsersController = __decorate([
     Controller(''),
     Pipe(ParamTypeCheck),
+    Interceptor(LoggingInterceptor),
     __metadata("design:paramtypes", [UserService])
 ], UsersController);
 export { UsersController };
