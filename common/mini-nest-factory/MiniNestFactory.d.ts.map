@@ -1,1 +1,1 @@
-{"version":3,"file":"MiniNestFactory.d.ts","sourceRoot":"","sources":["MiniNestFactory.ts"],"names":[],"mappings":"AA4FA,qBAAa,eAAe;WACX,MAAM,CAAC,SAAS,EAAE,GAAG;qBAKb,MAAM;;IAO3B,OAAO,CAAC,MAAM,CAAC,UAAU;CA4B5B"}
+{"version":3,"file":"MiniNestFactory.d.ts","sourceRoot":"","sources":["MiniNestFactory.ts"],"names":[],"mappings":"AAiIA,qBAAa,eAAe;WACX,MAAM,CAAC,SAAS,EAAE,GAAG;qBAMb,MAAM,QAAQ,MAAM,YAAY,MAAM,EAAE;;IAM7D,OAAO,CAAC,MAAM,CAAC,UAAU;CA6B5B"}

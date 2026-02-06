@@ -18,6 +18,18 @@ function collectPipes(controller: any, method: any) {
     return [...ctrlPipe, ...methodPipes];
 }
 
+async function collectInterceptors(controller: any, mehod: any) {
+    const ctrlInterceptors = Reflect.getMetadata('interceptors', controller.constructor) ?? [];
+    const methodInterceptors = Reflect.getMetadata('interceptors', controller, mehod) ?? [];
+    return [...ctrlInterceptors, ...methodInterceptors];
+}
+
+async function collectFilters(controller: any, method: any) {
+    const ctrlFilters = Reflect.getMetadata('filters', controller.constructor) ?? [];
+    const methodFilters = Reflect.getMetadata('filters', controller, method) ?? [];
+    return [...ctrlFilters, ...methodFilters];
+}
+
 async function runGuards(guards: any[], ctx: ExecutionContext, container: any) {
     for(const guard_ of guards) {
         const guard = container.resolve(guard_);
@@ -35,23 +47,44 @@ async function runPipes(pipes: any[], ctx: ExecutionContext, container: any, val
   }
 }
 
+async function runFilters(filters: any[], ctx: ExecutionContext, container: any, error: any) {
+    for(const filter_ of filters) {
+        const filter = typeof filter_ === 'function' ? container.resolve(filter_) : filter_;
+        const result = await filter.catch(error, ctx);
+        if(result !== undefined) {
+            return result;
+        }
+    }
+    return;
+}
+
+async function runInterceptors(interceptors: any[], ctx: ExecutionContext, container: any, handler: any) {
+    const chain = interceptors.reduceRight((next, interceptor_) => {
+        const interceptor = typeof interceptor_ === 'function' ? container.resolve(interceptor_) : interceptor_;
+        return () => interceptor.intercept(ctx, next);
+    }, handler);
+    return chain();
+}
+
 async function executeHandler({
   req,
   controller,
   methodName,
   container,
+  globalPipes,
 } : {
   req: Request;
   controller: any;
   methodName: string;
   container: any;
+  globalPipes: any[],
 }) {
   try {
     const method = controller[methodName];
     const paramMeta = Reflect.getMetadata('params', controller, methodName) ?? [];
 
     const args: any[] = [];
-    const pipes: any[] = [];
+    const pipes: any[] = [...globalPipes, ...collectPipes(controller, methodName)];
     // define execution context
     const ctx = new ExecutionContext(req, controller, method);
     // Store body, parameter and query
@@ -80,10 +113,14 @@ async function executeHandler({
     const guards = collectGuards(controller, methodName);
     await runGuards(guards, ctx, container);
     // Apply pipes
-    pipes.push(...collectPipes(controller, methodName));
     await runPipes(pipes, ctx, container, value);
-
-    return await method.apply(controller, args);
+    // Apply interceptors
+    const interceptors = await collectInterceptors(controller, methodName);
+    const handler = () => method.apply(controller, args);
+    if(interceptors.length === 0) {
+        return await handler();
+    }
+    return await runInterceptors(interceptors, ctx, container, handler);
   } catch (e: any) {
     if (e instanceof HttpException) throw e;
     throw new HttpException(500, e.message);
@@ -94,16 +131,16 @@ export class MiniNestFactory {
     static async create(AppModule: any) {
         const app = express();
         app.use(express.json());
-        this.initModule(AppModule, app, container);
+        const globalPipes: any[] = [];
+        this.initModule(AppModule, app, container, globalPipes);
         return {
-            listen(port: number) {
-                app.listen(port);
-                console.log(`http://localhost:${port}`);
+            listen(port: number, host: string, callback: () => {}) {
+                app.listen(port, host, callback);
             }
         }
     }
 
-    private static initModule(Module: any, app: any, container: any) {
+    private static initModule(Module: any, app: any, container: any, globalPipes: any[]) {
         const meta = Reflect.getMetadata('module', Module);
         meta.providers?.forEach((p: any) => container.resolve(p));
         meta.controllers?.forEach((Controller: any) => {
@@ -121,6 +158,7 @@ export class MiniNestFactory {
                                 controller,
                                 methodName: route.handlerName,
                                 container,
+                                globalPipes,
                             });
                         res.json(result);
                         } catch (e: any) {
