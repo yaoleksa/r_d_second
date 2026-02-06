@@ -57,8 +57,8 @@ __decorate([
 ], UsersController.prototype, "findByEmail", null);
 __decorate([
     Post('/'),
-    Guard(ApiKeyGuard),
     Pipe(new ZodValidationPipe(creatueUserSchema)),
+    Guard(ApiKeyGuard),
     __param(0, Body()),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [Object]),
@@ -66,8 +66,8 @@ __decorate([
 ], UsersController.prototype, "createNewUser", null);
 __decorate([
     Put('/'),
-    Guard(ApiKeyGuard),
     Pipe(new ZodValidationPipe(creatueUserSchema)),
+    Guard(ApiKeyGuard),
     __param(0, Body()),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [Object]),
@@ -75,8 +75,8 @@ __decorate([
 ], UsersController.prototype, "replaceUser", null);
 __decorate([
     Patch('/'),
-    Guard(ApiKeyGuard),
     Pipe(new ZodValidationPipe(creatueUserSchema)),
+    Guard(ApiKeyGuard),
     __param(0, Body()),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [Object]),
