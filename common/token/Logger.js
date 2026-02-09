@@ -5,14 +5,16 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
 import { Injectable } from "../ioc/Injectable.js";
-import { LOG } from "./token.js";
-let ConsoleLogger = class ConsoleLogger {
-    log(message) {
-        console.log(message);
+import { container } from "../container/container.js";
+let Logger = class Logger {
+    print(msg) {
+        console.log(msg);
     }
 };
-ConsoleLogger = __decorate([
-    Injectable(LOG)
-], ConsoleLogger);
-export { ConsoleLogger };
+Logger = __decorate([
+    Injectable()
+], Logger);
+export { Logger };
+export const LOGGER = "LOGGER";
+container.register(LOGGER, Logger);
 //# sourceMappingURL=Logger.js.map

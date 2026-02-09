@@ -1,15 +1,20 @@
 import "reflect-metadata";
 import { container } from "../container/container.js";
-export function Injectable(target, context) {
+export function Injectable(token, context) {
+    if (typeof token === "function" && context === undefined) {
+        container.register(token, token);
+        return;
+    }
     return function (target) {
-        container.register(target, target);
+        container.register(token ?? target, target);
     };
 }
 export function Inject(token) {
     return function (target, propertyKey, paramIndex) {
         const metadata = Reflect.getOwnMetadata("CUSTOM_TOKENS", target) || [];
-        metadata[paramIndex] = token;
-        container.register(token, token);
+        if (token !== undefined) {
+            metadata[paramIndex] = token;
+        }
         Reflect.defineMetadata("CUSTOM_TOKENS", metadata, target);
     };
 }

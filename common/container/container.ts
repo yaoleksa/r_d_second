@@ -4,20 +4,20 @@ export class Container {
   #registered = new Map();
   #singletons = new Map();
 
-  resolve<T>(token: new (...args: any[]) => T): T {
+  resolve<T>(token: any): T {
     if (this.#singletons.has(token)) return this.#singletons.get(token);
     const cs = this.#registered.get(token);
     if(!cs) {
-      throw new Error(`Token ${token.name} is not registered.`);
+      throw new Error(`Token ${String(token)} is not registered.`);
     }
 
-    const deps: any[] = Reflect.getMetadata("design:paramtypes", token) || [];
-    const customTokens = Reflect.getOwnMetadata("CUSTOM_TOKENS", token) || [];
+    const deps: any[] = Reflect.getMetadata("design:paramtypes", cs) || [];
+    const customTokens = Reflect.getOwnMetadata("CUSTOM_TOKENS", cs) || [];
 
     const resolved = new cs(...deps.map((d, index) => {
       const customToken = customTokens[index] ?? d;
       if(customToken === token) {
-        throw new Error(`Circular dependency detected for token ${token.name}.`);
+        throw new Error(`Circular dependency detected for token ${String(token)}.`);
       }
 
       return this.resolve(customToken);
@@ -27,9 +27,9 @@ export class Container {
     return resolved;
   }
 
-  register<T extends Function>(token: T, member: T): void {
+  register(token: any, member: any): void {
     if (this.#registered.has(token)) {
-      throw new Error(`Token ${token.name} is already registered.`);
+      throw new Error(`Token ${String(token)} is already registered.`);
     }
 
     this.#registered.set(token, member);

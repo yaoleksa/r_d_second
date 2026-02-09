@@ -11,7 +11,7 @@ var __param = (this && this.__param) || function (paramIndex, decorator) {
     return function (target, key) { decorator(target, key, paramIndex); }
 };
 import { Injectable, Inject } from "../../common/ioc/Injectable.js";
-import { LOG } from "../../common/tokens/token.js";
+import { LOGGER, Logger } from "../../common/token/Logger.js";
 let LoggingInterceptor = class LoggingInterceptor {
     logger;
     constructor(logger) {
@@ -19,14 +19,14 @@ let LoggingInterceptor = class LoggingInterceptor {
     }
     intercept(ctx, next) {
         const now = new Date();
-        console.log(`executed at: ${now.toLocaleDateString()}T${now.toLocaleTimeString()}`);
+        this.logger.print(`executed at: ${now.toLocaleDateString()}T${now.toLocaleTimeString()}`);
         return next();
     }
 };
 LoggingInterceptor = __decorate([
     Injectable(),
-    __param(0, Inject(LOG)),
-    __metadata("design:paramtypes", [Object])
+    __param(0, Inject(LOGGER)),
+    __metadata("design:paramtypes", [Logger])
 ], LoggingInterceptor);
 export { LoggingInterceptor };
 //# sourceMappingURL=LoggingInterceptor.js.map
