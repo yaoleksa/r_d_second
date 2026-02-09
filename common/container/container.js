@@ -10,11 +10,13 @@ export class Container {
             throw new Error(`Token ${token.name} is not registered.`);
         }
         const deps = Reflect.getMetadata("design:paramtypes", token) || [];
-        const resolved = new cs(...deps.map(d => {
-            if (d === token) {
+        const customTokens = Reflect.getOwnMetadata("CUSTOM_TOKENS", token) || [];
+        const resolved = new cs(...deps.map((d, index) => {
+            const customToken = customTokens[index] ?? d;
+            if (customToken === token) {
                 throw new Error(`Circular dependency detected for token ${token.name}.`);
             }
-            return this.resolve(d);
+            return this.resolve(customToken);
         }));
         this.#singletons.set(token, resolved);
         return resolved;

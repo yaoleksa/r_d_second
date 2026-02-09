@@ -12,13 +12,15 @@ export class Container {
     }
 
     const deps: any[] = Reflect.getMetadata("design:paramtypes", token) || [];
+    const customTokens = Reflect.getOwnMetadata("CUSTOM_TOKENS", token) || [];
 
-    const resolved = new cs(...deps.map(d => {
-      if(d === token) {
+    const resolved = new cs(...deps.map((d, index) => {
+      const customToken = customTokens[index] ?? d;
+      if(customToken === token) {
         throw new Error(`Circular dependency detected for token ${token.name}.`);
       }
 
-      return this.resolve(d)
+      return this.resolve(customToken);
     }));
 
     this.#singletons.set(token, resolved);

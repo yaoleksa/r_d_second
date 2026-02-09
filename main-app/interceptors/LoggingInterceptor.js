@@ -4,8 +4,19 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
     else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
-import { Injectable } from "../../common/ioc/Injectable.js";
+var __metadata = (this && this.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
+var __param = (this && this.__param) || function (paramIndex, decorator) {
+    return function (target, key) { decorator(target, key, paramIndex); }
+};
+import { Injectable, Inject } from "../../common/ioc/Injectable.js";
+import { LOG } from "../../common/tokens/token.js";
 let LoggingInterceptor = class LoggingInterceptor {
+    logger;
+    constructor(logger) {
+        this.logger = logger;
+    }
     intercept(ctx, next) {
         const now = new Date();
         console.log(`executed at: ${now.toLocaleDateString()}T${now.toLocaleTimeString()}`);
@@ -13,7 +24,9 @@ let LoggingInterceptor = class LoggingInterceptor {
     }
 };
 LoggingInterceptor = __decorate([
-    Injectable()
+    Injectable(),
+    __param(0, Inject(LOG)),
+    __metadata("design:paramtypes", [Object])
 ], LoggingInterceptor);
 export { LoggingInterceptor };
 //# sourceMappingURL=LoggingInterceptor.js.map
