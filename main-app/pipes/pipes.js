@@ -7,7 +7,7 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
-import { Injectible } from "../../common/ioc/Injectable.js";
+import { Injectable } from "../../common/ioc/Injectable.js";
 import { HttpException } from "../../common/exception/HttpException.js";
 import { ZodSchema, z } from "zod/v3";
 let ParamTypeCheck = class ParamTypeCheck {
@@ -18,7 +18,7 @@ let ParamTypeCheck = class ParamTypeCheck {
     }
 };
 ParamTypeCheck = __decorate([
-    Injectible()
+    Injectable()
 ], ParamTypeCheck);
 export { ParamTypeCheck };
 let EmailCheck = class EmailCheck {
@@ -32,7 +32,7 @@ let EmailCheck = class EmailCheck {
     }
 };
 EmailCheck = __decorate([
-    Injectible()
+    Injectable()
 ], EmailCheck);
 export { EmailCheck };
 let ZodValidationPipe = class ZodValidationPipe {
@@ -53,7 +53,7 @@ let ZodValidationPipe = class ZodValidationPipe {
     }
 };
 ZodValidationPipe = __decorate([
-    Injectible(),
+    Injectable(),
     __metadata("design:paramtypes", [ZodSchema])
 ], ZodValidationPipe);
 export { ZodValidationPipe };

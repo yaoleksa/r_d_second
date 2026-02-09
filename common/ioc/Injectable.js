@@ -1,5 +1,5 @@
 import { container } from "../container/container.js";
-export function Injectible(target, context) {
+export function Injectable(target, context) {
     return function (target) {
         container.register(target, target);
     };

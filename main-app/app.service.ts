@@ -1,7 +1,7 @@
-import { Injectible } from "../common/ioc/Injectable.js";
+import { Injectable } from "../common/ioc/Injectable.js";
 import { User } from "./dto/userDTO.js";
 
-@Injectible()
+@Injectable()
 export class UserService {
     private readonly users: User[] = [];
     private readonly unsuccessfulMessage: string = 'There is no user with such email :(';

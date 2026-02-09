@@ -4,7 +4,7 @@ export interface PipeTransform<T=any> {
     transform(value: T, ctx: ExecutionContext): T;
 }
 
-export function Pipe(...pipes: any[]) {
+export function UsePipe(...pipes: any[]) {
     return function(target: any, key?: string) {
         if(key) {
             Reflect.defineMetadata('pipes', pipes, target, key);

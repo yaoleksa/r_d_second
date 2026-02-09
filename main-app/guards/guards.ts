@@ -1,10 +1,10 @@
-import { Injectible } from '../../common/ioc/Injectable.js';
+import { Injectable } from '../../common/ioc/Injectable.js';
 import { ExecutionContext } from '../../common/guard/Guard.js';
 // Enable environment variables
 import * as dotenv from 'dotenv';
 dotenv.config();
 
-@Injectible()
+@Injectable()
 export class ApiKeyGuard {
     canActivate(ctx: ExecutionContext): boolean {
         // Compare headers API key with API key

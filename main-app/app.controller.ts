@@ -13,7 +13,7 @@ import { Interceptor } from "../common/interceptor/Interceptor.js";
 import type { CreateUserDto } from "./pipes/pipes.js";
 
 @Controller('')
-@Pipe(ParamTypeCheck)
+@UsePipe(ParamTypeCheck)
 @Guard(ApiKeyGuard)
 @Interceptor(LoggingInterceptor)
 export class UsersController {
@@ -31,19 +31,19 @@ export class UsersController {
     }
 
     @Post('/')
-    @Pipe(new ZodValidationPipe(creatueUserSchema))
+    @UsePipe(new ZodValidationPipe(creatueUserSchema))
     createNewUser(@Body() newUser: CreateUserDto): string {
         return this.userService.addNewUser(newUser);
     }
 
     @Put('/')
-    @Pipe(new ZodValidationPipe(creatueUserSchema))
+    @UsePipe(new ZodValidationPipe(creatueUserSchema))
     replaceUser(@Body() newUser: CreateUserDto): string {
         return this.userService.replaceUser(newUser);
     }
 
     @Patch('/')
-    @Pipe(new ZodValidationPipe(creatueUserSchema))
+    @UsePipe(new ZodValidationPipe(creatueUserSchema))
     updateUser(@Body() newUser: CreateUserDto): string {
         return this.userService.updateUser(newUser);
     }

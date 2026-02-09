@@ -1,8 +1,8 @@
-import { Injectible } from "../../common/ioc/Injectable.js";
+import { Injectable } from "../../common/ioc/Injectable.js";
 import { Interceptor } from "../../common/interceptor/Interceptor.js";
 import { ExecutionContext } from "../../common/guard/Guard.js";
 
-@Injectible()
+@Injectable()
 export class LoggingInterceptor implements Interceptor {
     intercept(ctx: ExecutionContext, next: () => Promise<any>) {
         const now = new Date();

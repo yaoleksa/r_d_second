@@ -1,10 +1,10 @@
-import { Injectible } from "../../common/ioc/Injectable.js";
+import { Injectable } from "../../common/ioc/Injectable.js";
 import { ExecutionContext } from "../../common/guard/Guard.js";
 import { PipeTransform } from "../../common/pipe/Pipe.js";
 import { HttpException } from "../../common/exception/HttpException.js";
 import { ZodSchema, z } from "zod/v3";
 
-@Injectible()
+@Injectable()
 export class ParamTypeCheck implements PipeTransform {
     transform(value: any, ctx: ExecutionContext) {
         if(value && typeof value !== 'string' && (typeof value?.name !== 'string' || typeof value?.email !== 'string')) {
@@ -13,7 +13,7 @@ export class ParamTypeCheck implements PipeTransform {
     }
 }
 
-@Injectible()
+@Injectable()
 export class EmailCheck implements PipeTransform {
     transform(value: any, ctx: ExecutionContext) {
         if(value?.email && !value.email.match(new RegExp('(.+)@(.+)\\.(.+)'))) {
@@ -24,7 +24,7 @@ export class EmailCheck implements PipeTransform {
     }
 }
 
-@Injectible()
+@Injectable()
 export class ZodValidationPipe implements PipeTransform {
     constructor(private zodSchema: ZodSchema) {}
     transform(value: any, ctx: ExecutionContext) {
