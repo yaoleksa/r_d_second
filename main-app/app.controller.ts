@@ -6,7 +6,7 @@ import { ParamTypeCheck, EmailCheck, ZodValidationPipe, creatueUserSchema } from
 import { User } from "./dto/userDTO.js";
 import { Query, Body, Param } from "../common/params/params.js";
 import { Guard } from "../common/guard/Guard.js";
-import { Pipe } from "../common/pipe/Pipe.js";
+import { UsePipe } from "../common/pipe/Pipe.js";
 import { LoggingInterceptor } from "./interceptors/LoggingInterceptor.js";
 import { Interceptor } from "../common/interceptor/Interceptor.js";
 // import type for constructor pipe

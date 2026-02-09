@@ -1,4 +1,4 @@
-export function Pipe(...pipes) {
+export function UsePipe(...pipes) {
     return function (target, key) {
         if (key) {
             Reflect.defineMetadata('pipes', pipes, target, key);

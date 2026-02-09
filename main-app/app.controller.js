@@ -17,7 +17,7 @@ import { ApiKeyGuard } from "./guards/guards.js";
 import { ParamTypeCheck, EmailCheck, ZodValidationPipe, creatueUserSchema } from "./pipes/pipes.js";
 import { Query, Body, Param } from "../common/params/params.js";
 import { Guard } from "../common/guard/Guard.js";
-import { Pipe } from "../common/pipe/Pipe.js";
+import { UsePipe } from "../common/pipe/Pipe.js";
 import { LoggingInterceptor } from "./interceptors/LoggingInterceptor.js";
 import { Interceptor } from "../common/interceptor/Interceptor.js";
 let UsersController = class UsersController {
@@ -59,7 +59,7 @@ __decorate([
 ], UsersController.prototype, "findByEmail", null);
 __decorate([
     Post('/'),
-    Pipe(new ZodValidationPipe(creatueUserSchema)),
+    UsePipe(new ZodValidationPipe(creatueUserSchema)),
     __param(0, Body()),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [Object]),
@@ -67,7 +67,7 @@ __decorate([
 ], UsersController.prototype, "createNewUser", null);
 __decorate([
     Put('/'),
-    Pipe(new ZodValidationPipe(creatueUserSchema)),
+    UsePipe(new ZodValidationPipe(creatueUserSchema)),
     __param(0, Body()),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [Object]),
@@ -75,7 +75,7 @@ __decorate([
 ], UsersController.prototype, "replaceUser", null);
 __decorate([
     Patch('/'),
-    Pipe(new ZodValidationPipe(creatueUserSchema)),
+    UsePipe(new ZodValidationPipe(creatueUserSchema)),
     __param(0, Body()),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [Object]),
@@ -90,7 +90,7 @@ __decorate([
 ], UsersController.prototype, "deleteUserByEmail", null);
 UsersController = __decorate([
     Controller(''),
-    Pipe(ParamTypeCheck),
+    UsePipe(ParamTypeCheck),
     Guard(ApiKeyGuard),
     Interceptor(LoggingInterceptor),
     __metadata("design:paramtypes", [UserService])
