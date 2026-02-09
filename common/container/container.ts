@@ -10,6 +10,9 @@ export class Container {
     if(!cs) {
       throw new Error(`Token ${String(token)} is not registered.`);
     }
+    if(typeof cs !== 'function') {
+      return cs;
+    }
 
     const deps: any[] = Reflect.getMetadata("design:paramtypes", cs) || [];
     const customTokens = Reflect.getOwnMetadata("CUSTOM_TOKENS", cs) || [];
@@ -24,6 +27,7 @@ export class Container {
     }));
 
     this.#singletons.set(token, resolved);
+    this.#singletons.set(cs, resolved);
     return resolved;
   }
 
