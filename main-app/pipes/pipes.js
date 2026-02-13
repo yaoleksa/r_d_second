@@ -13,7 +13,7 @@ import { ZodSchema, z } from "zod/v3";
 let ParamTypeCheck = class ParamTypeCheck {
     transform(value, ctx) {
         if (value && typeof value !== 'string' && (typeof value?.name !== 'string' || typeof value?.email !== 'string')) {
-            throw new HttpException(400, 'Name and email fields must be a string');
+            throw new HttpException(400, 'INVALID PAYLOAD!');
         }
     }
 };
@@ -23,11 +23,8 @@ ParamTypeCheck = __decorate([
 export { ParamTypeCheck };
 let EmailCheck = class EmailCheck {
     transform(value, ctx) {
-        if (value?.email && !value.email.match(new RegExp('(.+)@(.+)\\.(.+)'))) {
-            throw new HttpException(400, 'INVALID EMAIL FORMAT! [any-text]@[any-text].[any-text]');
-        }
-        else if (typeof value === 'string' && !value.match(new RegExp('(.+)@(.+)\\.(.+)'))) {
-            throw new HttpException(400, 'INVALID EMAIL FORMAT! [any-text]@[any-text].[any-text]');
+        if (value?.email && !value.email.match(new RegExp('(.+)@(.+)\\.(.+)')) || (typeof value === 'string' && !value.match(new RegExp('(.+)@(.+)\\.(.+)')))) {
+            throw new HttpException(400, 'INVALID PAYLOAD!');
         }
     }
 };
@@ -42,13 +39,13 @@ let ZodValidationPipe = class ZodValidationPipe {
     }
     transform(value, ctx) {
         if (!value.name || !value.email || Object.keys(value).length !== 2) {
-            throw new HttpException(400, 'INVALID USER PAYLOAD! User object must have two fiels: name and email');
+            throw new HttpException(400, 'INVALID PAYLOAD!');
         }
         try {
             return this.zodSchema.parse(value);
         }
         catch (err) {
-            throw new HttpException(400, 'INVALID USER PAYLOAD! User object must have two fiels: name and email');
+            throw new HttpException(400, 'INVALID PAYLOAD!');
         }
     }
 };

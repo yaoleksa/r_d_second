@@ -84,11 +84,11 @@ async function executeHandler({ req, controller, methodName, container, globalPi
                 pipes.push(...param.pipes);
             }
         }
+        // Apply pipes
+        await runPipes(pipes, ctx, container, value);
         // Apply guards
         const guards = collectGuards(controller, methodName);
         await runGuards(guards, ctx, container);
-        // Apply pipes
-        await runPipes(pipes, ctx, container, value);
         // Apply interceptors
         const interceptors = await collectInterceptors(controller, methodName);
         const handler = () => method.apply(controller, args);
