@@ -110,8 +110,16 @@ export class MiniNestFactory {
         const globalPipes = [];
         this.initModule(AppModule, app, container, globalPipes);
         return {
-            listen(port, host, callback) {
-                app.listen(port, host, callback);
+            async listen(port, host, callback) {
+                return new Promise((resolve, reject) => {
+                    const server = app.listen(port, host, () => {
+                        callback();
+                        resolve(server);
+                    });
+                    server.on('error', err => {
+                        reject(err);
+                    });
+                });
             }
         };
     }
