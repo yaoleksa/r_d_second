@@ -41,10 +41,12 @@ async function runGuards(guards: any[], ctx: ExecutionContext, container: any) {
 }
 
 async function runPipes(pipes: any[], ctx: ExecutionContext, container: any, value: any) {
-  for(const pipe_ of pipes) {
-    const pipe = typeof pipe_ === 'function' ? container.resolve(pipe_) : pipe_;
-    pipe.transform(value, ctx);
-  }
+    let transformedValue = value;
+    for(const pipe_ of pipes) {
+        const pipe = typeof pipe_ === 'function' ? container.resolve(pipe_) : pipe_;
+        transformedValue = pipe.transform(transformedValue, ctx);
+    }
+    return transformedValue;
 }
 
 async function runFilters(filters: any[], ctx: ExecutionContext, container: any, error: any) {
@@ -103,14 +105,19 @@ async function executeHandler({
             default:
                 break;
         }
-        value= args[param.index];
-        if(param.pipes.length > 0) {
-            pipes.push(...param.pipes);
-        }
+        const paramPipes = [
+            ...globalPipes,
+            ...collectPipes(controller, methodName),
+            ...(param.pipes ?? [])
+        ];
+        args[param.index] = await runPipes(
+            paramPipes,
+            ctx,
+            container,
+            args[param.index]
+        );
     }
     
-    // Apply pipes
-    await runPipes(pipes, ctx, container, value);
     // Apply guards
     const guards = collectGuards(controller, methodName);
     await runGuards(guards, ctx, container);
@@ -128,12 +135,16 @@ async function executeHandler({
 }
 
 export class MiniNestFactory {
+    // WANNA HIGHLIHT METHOD DEFINITION
     static async create(AppModule: any) {
         const app = express();
         app.use(express.json());
         const globalPipes: any[] = [];
         this.initModule(AppModule, app, container, globalPipes);
         return {
+            useGlobalPipes(...pipes: any[]) {
+                globalPipes.push(...pipes);
+            },
             async listen(port: number, host: string, callback: () => {}): Promise<any> {
                 return new Promise((resolve, reject) => {
                     const server = app.listen(port, host, () => {
@@ -147,7 +158,7 @@ export class MiniNestFactory {
             }
         }
     }
-
+    // NEXT METHOD
     private static initModule(Module: any, app: any, container: any, globalPipes: any[]) {
         const meta = Reflect.getMetadata('module', Module);
         meta.providers?.forEach((p: any) => container.resolve(p));
