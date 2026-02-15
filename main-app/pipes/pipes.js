@@ -40,12 +40,7 @@ let ZodValidationPipe = class ZodValidationPipe {
         this.zodSchema = zodSchema;
     }
     transform(value, ctx) {
-        try {
-            return this.zodSchema.parse(value);
-        }
-        catch (err) {
-            throw new HttpException(400, 'INVALID PAYLOAD!');
-        }
+        return this.zodSchema.parse(value);
     }
 };
 ZodValidationPipe = __decorate([
