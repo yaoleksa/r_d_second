@@ -18,9 +18,9 @@ function collectPipes(controller: any, method: any) {
     return [...ctrlPipe, ...methodPipes];
 }
 
-async function collectInterceptors(controller: any, mehod: any) {
+async function collectInterceptors(controller: any, method: any) {
     const ctrlInterceptors = Reflect.getMetadata('interceptors', controller.constructor) ?? [];
-    const methodInterceptors = Reflect.getMetadata('interceptors', controller, mehod) ?? [];
+    const methodInterceptors = Reflect.getMetadata('interceptors', controller, method) ?? [];
     return [...ctrlInterceptors, ...methodInterceptors];
 }
 
@@ -44,7 +44,7 @@ async function runPipes(pipes: any[], ctx: ExecutionContext, container: any, val
     let transformedValue = value;
     for(const pipe_ of pipes) {
         const pipe = typeof pipe_ === 'function' ? container.resolve(pipe_) : pipe_;
-        transformedValue = pipe.transform(transformedValue, ctx);
+        transformedValue = await pipe.transform(transformedValue, ctx);
     }
     return transformedValue;
 }
@@ -86,7 +86,6 @@ async function executeHandler({
     const paramMeta = Reflect.getMetadata('params', controller, methodName) ?? [];
 
     const args: any[] = [];
-    const pipes: any[] = [...globalPipes, ...collectPipes(controller, methodName)];
     // define execution context
     const ctx = new ExecutionContext(req, controller, method);
     // Store body, parameter and query
@@ -159,8 +158,23 @@ export class MiniNestFactory {
         }
     }
     // NEXT METHOD
-    private static initModule(Module: any, app: any, container: any, globalPipes: any[]) {
+    private static initModule(Module: any, app: any, container: any, globalPipes: any[], initializedModule = new Set<any>) {
+
+        if(initializedModule.has(Module)) {
+            return;
+        }
+        initializedModule.add(Module);
+
         const meta = Reflect.getMetadata('module', Module);
+        if(!meta) {
+            return;
+        }
+        
+        // Recursive imports
+        meta.imports?.forEach((importModule: any) => {
+            this.initModule(importModule, app, container, globalPipes, initializedModule);
+        });
+
         meta.providers?.forEach((p: any) => container.resolve(p));
         meta.controllers?.forEach((Controller: any) => {
             container.register(Controller, Controller);
@@ -172,7 +186,7 @@ export class MiniNestFactory {
                 prefix + route.path,
                 async (req: Request, res: Response) => {
                     const filters = await collectFilters(controller, route.handlerName);
-                    const ctx = new ExecutionContext(req, controller, route.handlerName);
+                    const ctx = new ExecutionContext(req, controller, controller[route.handlerName]);
                         try {
                             const result = await executeHandler({
                                 req,
@@ -182,14 +196,14 @@ export class MiniNestFactory {
                                 globalPipes,
                             });
                         res.json(result);
-                        } catch (e: any) {
-                            const filteredResult = await runFilters(filters, ctx, container, e);
+                        } catch (err: any) {
+                            const filteredResult = await runFilters(filters, ctx, container, err);
                             if(typeof filteredResult !== 'undefined') {
                                 res.json(filteredResult);
                                 return;
                             }
-                            res.status(e.status ?? 500).json({
-                                message: e.message
+                            res.status(err.status ?? 500).json({
+                                message: err.message
                             });
                         }
                     },

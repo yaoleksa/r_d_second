@@ -26,12 +26,9 @@ export class EmailCheck implements PipeTransform {
 export class ZodValidationPipe implements PipeTransform {
     constructor(private zodSchema: ZodSchema) {}
     transform(value: any, ctx: ExecutionContext) {
-        if(!value.name || !value.email || Object.keys(value).length !== 2) {
-            throw new HttpException(400, 'INVALID PAYLOAD!');
-        }
         try {
             return this.zodSchema.parse(value);
-        } catch(err) {
+        } catch(err: any) {
             throw new HttpException(400, 'INVALID PAYLOAD!');
         }
     }
