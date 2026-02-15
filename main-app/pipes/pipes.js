@@ -15,6 +15,7 @@ let ParamTypeCheck = class ParamTypeCheck {
         if (value && typeof value !== 'string' && (typeof value?.name !== 'string' || typeof value?.email !== 'string')) {
             throw new HttpException(400, 'INVALID PAYLOAD!');
         }
+        return value;
     }
 };
 ParamTypeCheck = __decorate([
@@ -26,6 +27,7 @@ let EmailCheck = class EmailCheck {
         if (value?.email && !value.email.match(new RegExp('(.+)@(.+)\\.(.+)')) || (typeof value === 'string' && !value.match(new RegExp('(.+)@(.+)\\.(.+)')))) {
             throw new HttpException(400, 'INVALID PAYLOAD!');
         }
+        return value;
     }
 };
 EmailCheck = __decorate([
@@ -38,9 +40,6 @@ let ZodValidationPipe = class ZodValidationPipe {
         this.zodSchema = zodSchema;
     }
     transform(value, ctx) {
-        if (!value.name || !value.email || Object.keys(value).length !== 2) {
-            throw new HttpException(400, 'INVALID PAYLOAD!');
-        }
         try {
             return this.zodSchema.parse(value);
         }

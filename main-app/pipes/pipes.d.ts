@@ -2,10 +2,10 @@ import { ExecutionContext } from "../../common/guard/Guard.js";
 import { PipeTransform } from "../../common/pipe/Pipe.js";
 import { ZodSchema, z } from "zod/v3";
 export declare class ParamTypeCheck implements PipeTransform {
-    transform(value: any, ctx: ExecutionContext): void;
+    transform(value: any, ctx: ExecutionContext): any;
 }
 export declare class EmailCheck implements PipeTransform {
-    transform(value: any, ctx: ExecutionContext): void;
+    transform(value: any, ctx: ExecutionContext): any;
 }
 export declare class ZodValidationPipe implements PipeTransform {
     private zodSchema;

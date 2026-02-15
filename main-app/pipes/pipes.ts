@@ -10,6 +10,7 @@ export class ParamTypeCheck implements PipeTransform {
         if(value && typeof value !== 'string' && (typeof value?.name !== 'string' || typeof value?.email !== 'string')) {
             throw new HttpException(400, 'INVALID PAYLOAD!');
         }
+        return value;
     }
 }
 
@@ -19,6 +20,7 @@ export class EmailCheck implements PipeTransform {
         if(value?.email && !value.email.match(new RegExp('(.+)@(.+)\\.(.+)')) || (typeof value === 'string' && !value.match(new RegExp('(.+)@(.+)\\.(.+)')))) {
             throw new HttpException(400, 'INVALID PAYLOAD!');
         }
+        return value;
     }
 }
 
